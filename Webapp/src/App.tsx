@@ -1145,10 +1145,8 @@ const App = () => {
                   padding: '16px',
                   backgroundColor: '#1e293b',
                   borderTop: '1px solid #334155',
-                  position: 'fixed',
+                  position: 'sticky',
                   bottom: 0,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
                   zIndex: 10,
                   boxSizing: 'border-box',
                   flexShrink: 0
