@@ -85,7 +85,7 @@ const App = () => {
     if (gameState === 'playing') {
       setTimeout(() => {
         inputRef.current?.focus();
-      }, 100);
+      }, 200);
     }
   }, [gameState]);
 
@@ -1147,8 +1147,8 @@ const App = () => {
                   borderTop: '1px solid #334155',
                   position: 'fixed',
                   bottom: 0,
-                  left: 0,
-                  right: 0,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
                   zIndex: 10,
                   boxSizing: 'border-box',
                   flexShrink: 0
