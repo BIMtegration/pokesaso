@@ -322,7 +322,8 @@ const App = () => {
           padding: 0,
           boxSizing: 'border-box',
           overflow: 'hidden',
-          flexDirection: 'row'
+          flexDirection: 'row',
+          background: '#1e293b'
         }}
       >
         <div
@@ -507,7 +508,7 @@ const App = () => {
           }}
         >
           {/* Panel Central */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', paddingTop: window.innerWidth < 1024 ? '60px' : '20px', paddingBottom: 0, flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', paddingTop: window.innerWidth < 1024 ? '60px' : '20px', paddingBottom: window.innerWidth < 1024 ? '120px' : '0', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%' }}>
             {showCorrectModal ? (
               /* Modal de Acierto */
               <div style={{
@@ -1133,7 +1134,7 @@ const App = () => {
                   </div>
                 )}
 
-                {/* Input y Botones - Sticky */}
+                {/* Input y Botones - Fixed al fondo */}
                 <div style={{
                   display: 'flex',
                   gap: '10px',
@@ -1142,19 +1143,17 @@ const App = () => {
                   alignItems: 'center',
                   flexWrap: window.innerWidth < 1024 ? 'wrap' : 'wrap',
                   flexDirection: window.innerWidth < 1024 ? 'column' : 'row',
-                  padding: window.innerWidth < 1024 ? '16px 12px 180px 12px' : '16px',
-                  backgroundColor: window.innerWidth < 1024 ? 'transparent' : '#1e293b',
-                  borderTop: window.innerWidth < 1024 ? 'none' : '1px solid #334155',
-                  position: window.innerWidth < 1024 ? 'fixed' : 'sticky',
+                  padding: window.innerWidth < 1024 ? '12px' : '16px',
+                  backgroundColor: window.innerWidth < 1024 ? '#1e293b' : '#1e293b',
+                  borderTop: window.innerWidth < 1024 ? '1px solid #334155' : '1px solid #334155',
+                  position: 'fixed',
                   bottom: 0,
-                  left: window.innerWidth < 1024 ? 0 : 'auto',
-                  right: window.innerWidth < 1024 ? 0 : 'auto',
-                  zIndex: window.innerWidth < 1024 ? 100 : 10,
+                  left: 0,
+                  right: 0,
+                  zIndex: 100,
                   boxSizing: 'border-box',
                   flexShrink: 0,
-                  maxWidth: window.innerWidth < 1024 ? '100%' : '700px',
-                  marginLeft: window.innerWidth < 1024 ? 0 : 'auto',
-                  marginRight: window.innerWidth < 1024 ? 0 : 'auto'
+                  maxWidth: 'none'
                 }}>
                   <input
                     ref={inputRef}
