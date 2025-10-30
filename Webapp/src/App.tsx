@@ -328,19 +328,28 @@ const App = () => {
         <div
           className="side-panel"
           style={{
-            flex: leftVisible ? '0 0 25%' : '0 0 0%',
-            background: '#0b1220',
+            // En móvil: modal overlay fijo. En desktop: panel lateral
+            position: window.innerWidth < 1024 ? 'fixed' : 'relative',
+            left: window.innerWidth < 1024 ? 0 : 'auto',
+            top: window.innerWidth < 1024 ? 0 : 'auto',
+            right: window.innerWidth < 1024 ? 0 : 'auto',
+            width: window.innerWidth < 1024 ? '100vw' : 'auto',
+            height: window.innerWidth < 1024 ? '100vh' : '100vh',
+            zIndex: window.innerWidth < 1024 ? 1000 : 'auto',
+            // Desktop: panel flex
+            flex: window.innerWidth < 1024 ? 'none' : (leftVisible ? '0 0 25%' : '0 0 0%'),
+            background: window.innerWidth < 1024 ? (leftVisible ? 'rgba(0, 0, 0, 0.9)' : 'transparent') : '#0b1220',
             color: '#f1f5f9',
-            padding: leftVisible ? 8 : 0,
+            padding: window.innerWidth < 1024 ? 0 : (leftVisible ? 8 : 0),
             borderRadius: 0,
-            overflow: 'hidden',
+            overflow: window.innerWidth < 1024 ? 'auto' : 'hidden',
             visibility: leftVisible ? 'visible' : 'hidden',
             transition: 'all 300ms ease',
             minWidth: 0,
-            height: '100vh',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
+            alignItems: window.innerWidth < 1024 ? 'flex-start' : 'center',
+            justifyContent: window.innerWidth < 1024 ? 'center' : 'center',
+            paddingTop: window.innerWidth < 1024 ? '60px' : 0
           }}
         >
           {currentCard && (
@@ -507,7 +516,7 @@ const App = () => {
           }}
         >
           {/* Panel Central */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', paddingTop: window.innerWidth < 1024 ? '60px' : '20px', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%', paddingBottom: window.innerWidth < 1024 ? '280px' : 'auto' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', paddingTop: window.innerWidth < 1024 ? '60px' : '20px', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%', paddingBottom: window.innerWidth < 1024 ? '80px' : 'auto' }}>
             {showCorrectModal ? (
               /* Modal de Acierto */
               <div style={{
