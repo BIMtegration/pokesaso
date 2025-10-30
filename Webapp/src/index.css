@@ -91,3 +91,187 @@ button:focus-visible {
   scrollbar-color: #4ade80 #0f172a;
   scrollbar-width: thin;
 }
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablets (768px - 1024px) */
+@media (max-width: 1024px) {
+  #root {
+    font-size: 14px;
+  }
+  
+  .main-layout {
+    flex-direction: column !important;
+  }
+  
+  .side-panel {
+    flex: 0 0 auto !important;
+    min-height: 120px !important;
+    height: auto !important;
+  }
+  
+  .game-container {
+    flex: 1 !important;
+    height: auto !important;
+  }
+  
+  .right-sidebar {
+    width: 100% !important;
+    height: auto !important;
+    padding: 16px !important;
+    border-left: none !important;
+    border-top: 2px solid #334155 !important;
+    min-width: auto !important;
+  }
+}
+
+/* Mobile Landscape (480px - 768px) */
+@media (max-width: 768px) {
+  #root {
+    font-size: 13px;
+  }
+  
+  h1 {
+    font-size: 1.8em !important;
+  }
+  
+  .main-layout {
+    flex-direction: column !important;
+    height: auto !important;
+  }
+  
+  .side-panel {
+    flex: 0 0 auto !important;
+    max-height: 150px !important;
+    height: auto !important;
+    padding: 12px !important;
+  }
+  
+  .card-content {
+    max-height: 120px !important;
+  }
+  
+  .card-image {
+    max-height: 100px !important;
+  }
+  
+  .game-container {
+    flex: 1 !important;
+    height: auto !important;
+    gap: 12px !important;
+  }
+  
+  .right-sidebar {
+    width: 100% !important;
+    height: auto !important;
+    padding: 12px !important;
+    border-left: none !important;
+    border-top: 2px solid #334155 !important;
+    gap: 8px !important;
+  }
+  
+  .stat-box {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+  
+  .pistas-scrollable {
+    max-width: 100% !important;
+    max-height: 200px !important;
+  }
+  
+  input[type="text"] {
+    font-size: 14px !important;
+    padding: 10px !important;
+  }
+  
+  button {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* Mobile Portrait (<480px) */
+@media (max-width: 480px) {
+  #root {
+    font-size: 12px;
+  }
+  
+  h1 {
+    font-size: 1.4em !important;
+  }
+  
+  .main-layout {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  
+  .side-panel {
+    flex: 0 0 auto !important;
+    max-height: 120px !important;
+    height: auto !important;
+    padding: 8px !important;
+    min-width: auto !important;
+  }
+  
+  .card-content {
+    max-height: 100px !important;
+    font-size: 11px !important;
+  }
+  
+  .card-image {
+    max-height: 80px !important;
+  }
+  
+  .game-container {
+    flex: 1 !important;
+    height: auto !important;
+    padding: 12px !important;
+    gap: 8px !important;
+    overflow-y: auto !important;
+  }
+  
+  .right-sidebar {
+    width: 100% !important;
+    height: auto !important;
+    padding: 8px !important;
+    border-left: none !important;
+    border-top: 2px solid #334155 !important;
+    gap: 6px !important;
+    min-width: auto !important;
+  }
+  
+  .stat-box {
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+    min-height: auto !important;
+  }
+  
+  .pistas-scrollable {
+    max-width: 100% !important;
+    max-height: 150px !important;
+    gap: 4px !important;
+  }
+  
+  .pista-button {
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+  }
+  
+  input[type="text"] {
+    font-size: 13px !important;
+    padding: 8px !important;
+    width: 100% !important;
+  }
+  
+  button {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    width: 100% !important;
+  }
+  
+  .game-title {
+    font-size: 1.2em !important;
+    margin: 8px 0 !important;
+  }
+}
