@@ -994,7 +994,7 @@ const App = () => {
                           style={{
                             width: '100%',
                             padding: '8px 12px',
-                            background: expandedHint === 0 ? '#334155' : 'transparent',
+                            background: expandedHint === 0 ? '#334155' : '#0f172a',
                             border: 'none',
                             color: '#e2e8f0',
                             fontSize: '12px',
@@ -1029,7 +1029,7 @@ const App = () => {
                           style={{
                             width: '100%',
                             padding: '8px 12px',
-                            background: expandedHint === 1 ? '#334155' : 'transparent',
+                            background: expandedHint === 1 ? '#334155' : '#0f172a',
                             border: 'none',
                             color: '#60a5fa',
                             fontSize: '12px',
@@ -1062,7 +1062,7 @@ const App = () => {
                           style={{
                             width: '100%',
                             padding: '8px 12px',
-                            background: expandedHint === 2 ? '#334155' : 'transparent',
+                            background: expandedHint === 2 ? '#334155' : '#0f172a',
                             border: 'none',
                             color: '#ff6b6b',
                             fontSize: '12px',
@@ -1097,7 +1097,7 @@ const App = () => {
                           style={{
                             width: '100%',
                             padding: '8px 12px',
-                            background: expandedHint === 3 ? '#334155' : 'transparent',
+                            background: expandedHint === 3 ? '#334155' : '#0f172a',
                             border: 'none',
                             color: '#4ade80',
                             fontSize: '12px',
