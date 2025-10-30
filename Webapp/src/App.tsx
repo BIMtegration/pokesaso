@@ -949,7 +949,7 @@ const App = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     flex: '1 1 auto',
-                    maxHeight: 'calc(100vh - 120px)',
+                    maxHeight: window.innerWidth < 1024 ? 'calc(100vh - 60px)' : 'calc(100vh - 120px)',
                     marginBottom: window.innerWidth < 1024 ? '8px' : '12px',
                     marginTop: window.innerWidth < 1024 ? '0px' : '0px',
                     overflow: 'hidden'
