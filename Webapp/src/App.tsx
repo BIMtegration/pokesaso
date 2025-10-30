@@ -934,7 +934,7 @@ const App = () => {
                   ¡¿Quién es ese Pokémon?!
                 </h1>
 
-                {/* Pistas Acordeón - Crece para llenar el espacio */}
+                {/* Pistas Acordeón - Crece con su contenido */}
                 {currentCard && (
                   <div style={{
                     background: '#0f172a',
@@ -947,8 +947,7 @@ const App = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '8px',
-                    flex: '1 1 100%',
-                    minHeight: '300px',
+                    flex: '1 1 auto',
                     overflowY: 'auto',
                     scrollBehavior: 'smooth',
                     marginBottom: '12px'
