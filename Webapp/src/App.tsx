@@ -1140,7 +1140,7 @@ const App = () => {
                             transition: 'all 200ms'
                           }}
                         >
-                          🟣 Pista 5: Imagen {expandedHint === 4 ? '▼' : '▶'}
+                          🟣 Pista 5: Imagen Parcial {expandedHint === 4 ? '▼' : '▶'}
                         </button>
                         {expandedHint === 4 && (
                           <div style={{ padding: '12px', background: '#0f172a', borderTop: '1px solid #334155', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'auto', maxHeight: 'none' }}>
@@ -1151,7 +1151,7 @@ const App = () => {
                                 style={{
                                   maxWidth: '100%',
                                   height: 'auto',
-                                  maxHeight: '400px',
+                                  maxHeight: '200px',
                                   objectFit: 'contain'
                                 }}
                               />
