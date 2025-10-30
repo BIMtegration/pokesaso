@@ -507,7 +507,7 @@ const App = () => {
           }}
         >
           {/* Panel Central */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', paddingTop: window.innerWidth < 1024 ? '60px' : '20px', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%', paddingBottom: window.innerWidth < 1024 ? '180px' : 'auto' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', paddingTop: window.innerWidth < 1024 ? '60px' : '20px', paddingBottom: 0, flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%' }}>
             {showCorrectModal ? (
               /* Modal de Acierto */
               <div style={{
@@ -1137,21 +1137,24 @@ const App = () => {
                 <div style={{
                   display: 'flex',
                   gap: '10px',
-                  width: window.innerWidth < 1024 ? '100%' : '100%',
-                  maxWidth: '700px',
+                  width: '100%',
                   justifyContent: 'center',
+                  alignItems: 'center',
                   flexWrap: window.innerWidth < 1024 ? 'wrap' : 'wrap',
                   flexDirection: window.innerWidth < 1024 ? 'column' : 'row',
-                  padding: '16px',
-                  backgroundColor: '#1e293b',
-                  borderTop: '1px solid #334155',
+                  padding: window.innerWidth < 1024 ? '16px 12px 180px 12px' : '16px',
+                  backgroundColor: window.innerWidth < 1024 ? 'transparent' : '#1e293b',
+                  borderTop: window.innerWidth < 1024 ? 'none' : '1px solid #334155',
                   position: window.innerWidth < 1024 ? 'fixed' : 'sticky',
                   bottom: 0,
                   left: window.innerWidth < 1024 ? 0 : 'auto',
                   right: window.innerWidth < 1024 ? 0 : 'auto',
                   zIndex: window.innerWidth < 1024 ? 100 : 10,
                   boxSizing: 'border-box',
-                  flexShrink: 0
+                  flexShrink: 0,
+                  maxWidth: window.innerWidth < 1024 ? '100%' : '700px',
+                  marginLeft: window.innerWidth < 1024 ? 0 : 'auto',
+                  marginRight: window.innerWidth < 1024 ? 0 : 'auto'
                 }}>
                   <input
                     ref={inputRef}
