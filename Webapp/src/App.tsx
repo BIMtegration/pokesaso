@@ -929,8 +929,8 @@ const App = () => {
                   fontWeight: 'bold',
                   color: '#ff6b6b',
                   textShadow: '0 0 10px rgba(255, 107, 107, 0.5)',
-                  marginTop: 0,
-                  marginBottom: window.innerWidth < 1024 ? '8px' : '20px',
+                  marginTop: window.innerWidth < 1024 ? '-8px' : 0,
+                  marginBottom: window.innerWidth < 1024 ? '4px' : '20px',
                   textAlign: 'center',
                   flexShrink: 0
                 }}>
@@ -950,7 +950,8 @@ const App = () => {
                     flexDirection: 'column',
                     flex: '1 1 auto',
                     maxHeight: 'calc(100vh - 120px)',
-                    marginBottom: '12px',
+                    marginBottom: window.innerWidth < 1024 ? '8px' : '12px',
+                    marginTop: window.innerWidth < 1024 ? '0px' : '0px',
                     overflow: 'hidden'
                   }}
                   >
