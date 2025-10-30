@@ -31,6 +31,7 @@ const App = () => {
   const [showResultsModal, setShowResultsModal] = useState(false);
   const [showCorrectModal, setShowCorrectModal] = useState(false);
   const [showEasterEggModal, setShowEasterEggModal] = useState(false);
+  const [showWrongGuessModal, setShowWrongGuessModal] = useState(false);
   const [difficulty, setDifficulty] = useState('easy');
   const [pulse, setPulse] = useState(false);
   const [selectedGens, setSelectedGens] = useState<string[]>(['gen1']);
@@ -215,10 +216,9 @@ const App = () => {
         // Se agotaron todas las pistas - Game over
         setUserGuess('');
         setFeedback('✗ ¡No adivinaste!');
-        // Cambiar a siguiente Pokémon después de 1.5 segundos
-        setTimeout(() => {
-          handleNextCard();
-        }, 1500);
+        // Mostrar modal de "No adivinaste"
+        setRevealedCard(true); // Mostrar imagen en el panel izquierdo
+        setShowWrongGuessModal(true);
       }
     }
     
@@ -555,6 +555,161 @@ const App = () => {
                 >
                   ▶ Continuar
                 </button>
+              </div>
+            ) : showWrongGuessModal ? (
+              /* Modal de "No adivinaste" - Muestra respuesta correcta */
+              <div style={{
+                display: 'flex',
+                width: '100vw',
+                height: '100vh',
+                alignItems: 'stretch',
+                gap: 0,
+                padding: 0,
+                boxSizing: 'border-box',
+                overflow: 'hidden',
+              }}>
+                {/* Panel Izquierdo - Tarjeta revelada */}
+                <div
+                  style={{
+                    flex: '0 0 25%',
+                    background: '#0b1220',
+                    color: '#f1f5f9',
+                    padding: 8,
+                    borderRadius: 0,
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRight: '2px solid #4ade80',
+                  }}
+                >
+                  {currentCard && (
+                    <div style={{
+                      background: '#1e293b',
+                      borderRadius: '12px',
+                      padding: '16px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '12px',
+                      width: '100%',
+                      maxHeight: '100%',
+                      overflow: 'auto'
+                    }}>
+                      {/* Imagen del Pokémon */}
+                      {currentCard.imageUrl && (
+                        <img
+                          src={currentCard.imageUrl}
+                          alt={currentCard.name}
+                          style={{
+                            maxWidth: '100%',
+                            height: 'auto',
+                            maxHeight: '160px',
+                            borderRadius: '8px'
+                          }}
+                        />
+                      )}
+                      {/* Nombre */}
+                      <div style={{ textAlign: 'center' }}>
+                        <p style={{ marginTop: 0, marginBottom: '4px', fontSize: '11px', color: '#94a3b8' }}>
+                          Pokémon:
+                        </p>
+                        <p style={{ marginTop: 0, marginBottom: '8px', fontSize: '16px', fontWeight: 'bold', color: '#fbbf24' }}>
+                          {currentCard.name}
+                        </p>
+                      </div>
+                      {/* Apodo */}
+                      {currentCard.apodo && (
+                        <div style={{ textAlign: 'center', fontSize: '12px', color: '#cbd5e1' }}>
+                          <p style={{ marginTop: 0, marginBottom: '4px', fontSize: '10px', color: '#94a3b8' }}>
+                            Apodo:
+                          </p>
+                          <p style={{ marginTop: 0, marginBottom: 0, fontWeight: 'bold' }}>
+                            {currentCard.apodo}
+                          </p>
+                        </div>
+                      )}
+                      {/* Tipo */}
+                      {currentCard.type && (
+                        <div style={{ textAlign: 'center', fontSize: '12px', color: '#60a5fa' }}>
+                          <p style={{ marginTop: 0, marginBottom: '4px', fontSize: '10px', color: '#94a3b8' }}>
+                            Tipo:
+                          </p>
+                          <p style={{ marginTop: 0, marginBottom: 0, fontWeight: 'bold' }}>
+                            {currentCard.type}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Panel Central - Modal */}
+                <div
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: '#1e293b',
+                  }}
+                >
+                  <div style={{
+                    background: '#0f172a',
+                    border: '3px solid #ef4444',
+                    borderRadius: '12px',
+                    padding: '50px',
+                    maxWidth: '500px',
+                    width: '90%',
+                    boxShadow: '0 0 30px rgba(239, 68, 68, 0.3)',
+                    textAlign: 'center'
+                  }}>
+                    <h2 style={{ marginTop: 0, marginBottom: '20px', textAlign: 'center', fontSize: '48px', color: '#ef4444' }}>
+                      ❌ ¡No adivinaste!
+                    </h2>
+                    
+                    <div style={{ marginBottom: '30px', fontSize: '18px', color: '#e2e8f0', lineHeight: '1.6' }}>
+                      <p style={{ marginTop: 0, marginBottom: '15px' }}>
+                        La respuesta era:
+                      </p>
+                      <p style={{ fontSize: '32px', fontWeight: 'bold', color: '#fbbf24', marginTop: 0, marginBottom: 0 }}>
+                        {currentCard?.name}
+                      </p>
+                    </div>
+
+                    <div style={{ marginBottom: '25px', padding: '16px', backgroundColor: '#1e293b', borderRadius: '8px', border: '2px solid #334155' }}>
+                      <p style={{ marginTop: 0, marginBottom: '8px', fontSize: '14px', color: '#94a3b8' }}>
+                        🎓 Recuerda este Pokémon:
+                      </p>
+                      <p style={{ marginTop: 0, marginBottom: 0, fontSize: '13px', color: '#cbd5e1', lineHeight: '1.5' }}>
+                        <strong>Apodo:</strong> {currentCard?.apodo}<br />
+                        <strong>Tipo:</strong> {currentCard?.type}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        setShowWrongGuessModal(false);
+                        setRevealedCard(false);
+                        handleNextCard();
+                      }}
+                      style={{
+                        padding: '14px 40px',
+                        borderRadius: '8px',
+                        border: 'none',
+                        background: '#ef4444',
+                        color: '#ffffff',
+                        fontSize: '18px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 200ms'
+                      }}
+                    >
+                      ▶ Siguiente Pokémon
+                    </button>
+                  </div>
+                </div>
               </div>
             ) : showResultsModal ? (
               /* Modal de Resultados */
