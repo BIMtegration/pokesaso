@@ -322,7 +322,7 @@ const App = () => {
           padding: 0,
           boxSizing: 'border-box',
           overflow: 'hidden',
-          flexDirection: window.innerWidth < 1024 ? 'column' : 'row'
+          flexDirection: 'row'
         }}
       >
         <div
@@ -507,7 +507,7 @@ const App = () => {
           }}
         >
           {/* Panel Central */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%', paddingBottom: window.innerWidth < 1024 ? '320px' : 'auto' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', paddingTop: window.innerWidth < 1024 ? '80px' : '20px', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%', paddingBottom: window.innerWidth < 1024 ? '320px' : 'auto' }}>
             {showCorrectModal ? (
               /* Modal de Acierto */
               <div style={{
@@ -1216,11 +1216,12 @@ const App = () => {
           {/* Panel Derecho - Contador de Puntos */}
           {gameState === 'playing' && (
             <div style={{
-              width: window.innerWidth < 1024 ? '100%' : '200px',
+              width: window.innerWidth < 1024 ? 'calc(100vw - 0px)' : '200px',
               height: window.innerWidth < 1024 ? 'auto' : '100vh',
               background: '#0b1220',
               borderLeft: window.innerWidth < 1024 ? 'none' : '3px solid #4ade80',
               borderTop: window.innerWidth < 1024 ? '3px solid #4ade80' : 'none',
+              borderRight: window.innerWidth < 1024 ? 'none' : 'none',
               display: 'flex',
               flexDirection: window.innerWidth < 1024 ? 'row' : 'column',
               alignItems: 'center',
@@ -1228,7 +1229,11 @@ const App = () => {
               gap: window.innerWidth < 1024 ? '0px' : '30px',
               padding: window.innerWidth < 1024 ? '12px 8px' : '20px',
               boxSizing: 'border-box',
-              order: window.innerWidth < 1024 ? -1 : 'unset'
+              position: window.innerWidth < 1024 ? 'fixed' : 'relative',
+              top: window.innerWidth < 1024 ? 0 : 'auto',
+              left: window.innerWidth < 1024 ? 0 : 'auto',
+              right: window.innerWidth < 1024 ? 0 : 'auto',
+              zIndex: window.innerWidth < 1024 ? 5 : 'auto'
             }}>
               {/* Puntos grandes */}
               <div style={{
