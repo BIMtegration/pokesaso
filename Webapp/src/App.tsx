@@ -506,7 +506,7 @@ const App = () => {
           }}
         >
           {/* Panel Central */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: '20px', flexDirection: 'column', gap: 12, height: '100vh', overflowY: 'hidden' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: '20px', flexDirection: 'column', gap: 12, height: '100vh', overflowY: 'auto' }}>
             {showCorrectModal ? (
               /* Modal de Acierto */
               <div style={{
@@ -947,8 +947,8 @@ const App = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '8px',
-                    flex: '1 1 auto',
-                    minHeight: '200px',
+                    flex: '1 1 100%',
+                    minHeight: '300px',
                     overflowY: 'auto',
                     scrollBehavior: 'smooth',
                     marginBottom: '12px'
