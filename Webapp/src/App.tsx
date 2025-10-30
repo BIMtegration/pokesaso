@@ -993,11 +993,11 @@ const App = () => {
                           onClick={() => setExpandedHint(expandedHint === 0 ? null : 0)}
                           style={{
                             width: '100%',
-                            padding: '12px 16px',
+                            padding: '16px 20px',
                             background: expandedHint === 0 ? '#334155' : '#0f172a',
                             border: 'none',
                             color: '#fbbf24',
-                            fontSize: '13px',
+                            fontSize: '15px',
                             fontWeight: 'bold',
                             cursor: 'pointer',
                             textAlign: 'left',
@@ -1028,11 +1028,11 @@ const App = () => {
                           onClick={() => setExpandedHint(expandedHint === 1 ? null : 1)}
                           style={{
                             width: '100%',
-                            padding: '12px 16px',
+                            padding: '16px 20px',
                             background: expandedHint === 1 ? '#334155' : '#0f172a',
                             border: 'none',
                             color: '#38bdf8',
-                            fontSize: '13px',
+                            fontSize: '15px',
                             fontWeight: 'bold',
                             cursor: 'pointer',
                             textAlign: 'left',
@@ -1061,11 +1061,11 @@ const App = () => {
                           onClick={() => setExpandedHint(expandedHint === 2 ? null : 2)}
                           style={{
                             width: '100%',
-                            padding: '12px 16px',
+                            padding: '16px 20px',
                             background: expandedHint === 2 ? '#334155' : '#0f172a',
                             border: 'none',
                             color: '#f87171',
-                            fontSize: '13px',
+                            fontSize: '15px',
                             fontWeight: 'bold',
                             cursor: 'pointer',
                             textAlign: 'left',
@@ -1096,11 +1096,11 @@ const App = () => {
                           onClick={() => setExpandedHint(expandedHint === 3 ? null : 3)}
                           style={{
                             width: '100%',
-                            padding: '12px 16px',
+                            padding: '16px 20px',
                             background: expandedHint === 3 ? '#334155' : '#0f172a',
                             border: 'none',
                             color: '#86efac',
-                            fontSize: '13px',
+                            fontSize: '15px',
                             fontWeight: 'bold',
                             cursor: 'pointer',
                             textAlign: 'left',
@@ -1129,11 +1129,11 @@ const App = () => {
                           onClick={() => setExpandedHint(expandedHint === 4 ? null : 4)}
                           style={{
                             width: '100%',
-                            padding: '12px 16px',
+                            padding: '16px 20px',
                             background: expandedHint === 4 ? '#334155' : '#0f172a',
                             border: 'none',
                             color: '#d8b4fe',
-                            fontSize: '13px',
+                            fontSize: '15px',
                             fontWeight: 'bold',
                             cursor: 'pointer',
                             textAlign: 'left',
