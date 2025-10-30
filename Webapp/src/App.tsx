@@ -507,7 +507,7 @@ const App = () => {
           }}
         >
           {/* Panel Central */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', paddingTop: window.innerWidth < 1024 ? '80px' : '20px', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%', paddingBottom: window.innerWidth < 1024 ? '280px' : 'auto' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', paddingTop: window.innerWidth < 1024 ? '60px' : '20px', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%', paddingBottom: window.innerWidth < 1024 ? '280px' : 'auto' }}>
             {showCorrectModal ? (
               /* Modal de Acierto */
               <div style={{
@@ -1228,8 +1228,8 @@ const App = () => {
               flexDirection: window.innerWidth < 1024 ? 'row' : 'column',
               alignItems: 'center',
               justifyContent: window.innerWidth < 1024 ? 'space-around' : 'center',
-              gap: window.innerWidth < 1024 ? '0px' : '30px',
-              padding: window.innerWidth < 1024 ? '12px 8px' : '20px',
+              gap: window.innerWidth < 1024 ? '2px' : '30px',
+              padding: window.innerWidth < 1024 ? '4px 6px' : '20px',
               boxSizing: 'border-box',
               position: window.innerWidth < 1024 ? 'fixed' : 'relative',
               top: window.innerWidth < 1024 ? 0 : 'auto',
@@ -1242,19 +1242,19 @@ const App = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: window.innerWidth < 1024 ? '4px' : '10px'
+                gap: window.innerWidth < 1024 ? '2px' : '10px'
               }}>
                 <div style={{
-                  fontSize: window.innerWidth < 1024 ? '11px' : '14px',
+                  fontSize: window.innerWidth < 1024 ? '10px' : '14px',
                   fontWeight: 'bold',
                   color: '#94a3b8',
                   textTransform: 'uppercase',
-                  letterSpacing: '1px'
+                  letterSpacing: '0.5px'
                 }}>
                   Pts
                 </div>
                 <div style={{
-                  fontSize: window.innerWidth < 1024 ? '28px' : '64px',
+                  fontSize: window.innerWidth < 1024 ? '20px' : '64px',
                   fontWeight: 'bold',
                   color: '#4ade80',
                   textShadow: '0 0 20px rgba(74, 222, 128, 0.5)',
@@ -1269,19 +1269,19 @@ const App = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: window.innerWidth < 1024 ? '4px' : '10px'
+                gap: window.innerWidth < 1024 ? '2px' : '10px'
               }}>
                 <div style={{
-                  fontSize: window.innerWidth < 1024 ? '11px' : '14px',
+                  fontSize: window.innerWidth < 1024 ? '9px' : '14px',
                   fontWeight: 'bold',
                   color: '#94a3b8',
                   textTransform: 'uppercase',
-                  letterSpacing: '1px'
+                  letterSpacing: '0.5px'
                 }}>
-                  Tiempo
+                  T
                 </div>
                 <div style={{
-                  fontSize: window.innerWidth < 1024 ? '20px' : '44px',
+                  fontSize: window.innerWidth < 1024 ? '14px' : '44px',
                   fontWeight: 'bold',
                   color: timeLeft <= 30 ? '#ef4444' : '#4ade80',
                   textShadow: timeLeft <= 30 ? '0 0 20px rgba(239, 68, 68, 0.5)' : '0 0 20px rgba(74, 222, 128, 0.5)',
@@ -1297,19 +1297,19 @@ const App = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: window.innerWidth < 1024 ? '4px' : '10px'
+                gap: window.innerWidth < 1024 ? '2px' : '10px'
               }}>
                 <div style={{
-                  fontSize: window.innerWidth < 1024 ? '11px' : '14px',
+                  fontSize: window.innerWidth < 1024 ? '9px' : '14px',
                   fontWeight: 'bold',
                   color: '#94a3b8',
                   textTransform: 'uppercase',
-                  letterSpacing: '1px'
+                  letterSpacing: '0.5px'
                 }}>
-                  Ronda
+                  R
                 </div>
                 <div style={{
-                  fontSize: window.innerWidth < 1024 ? '24px' : '48px',
+                  fontSize: window.innerWidth < 1024 ? '18px' : '48px',
                   fontWeight: 'bold',
                   color: '#60a5fa',
                   textShadow: '0 0 20px rgba(96, 165, 250, 0.5)'
