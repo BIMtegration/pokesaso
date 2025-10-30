@@ -948,7 +948,7 @@ const App = () => {
                     flexDirection: 'column',
                     gap: '8px',
                     flex: '1 1 auto',
-                    maxHeight: 'calc(100vh - 200px)',
+                    maxHeight: 'calc(100vh - 120px)',
                     overflowY: 'auto',
                     scrollBehavior: 'smooth',
                     marginBottom: '12px'
