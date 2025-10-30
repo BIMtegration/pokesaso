@@ -1233,8 +1233,8 @@ const App = () => {
               flexDirection: window.innerWidth < 1024 ? 'row' : 'column',
               alignItems: 'center',
               justifyContent: window.innerWidth < 1024 ? 'space-around' : 'flex-start',
-              gap: window.innerWidth < 1024 ? '2px' : '16px',
-              padding: window.innerWidth < 1024 ? '4px 6px' : '12px',
+              gap: window.innerWidth < 1024 ? '0px' : '16px',
+              padding: window.innerWidth < 1024 ? '2px 4px' : '12px',
               boxSizing: 'border-box',
               position: window.innerWidth < 1024 ? 'fixed' : 'relative',
               top: window.innerWidth < 1024 ? 0 : 'auto',
@@ -1248,7 +1248,7 @@ const App = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: window.innerWidth < 1024 ? '2px' : '10px'
+                gap: window.innerWidth < 1024 ? '0px' : '10px'
               }}>
                 <div style={{
                   fontSize: window.innerWidth < 1024 ? '10px' : '14px',
@@ -1275,7 +1275,7 @@ const App = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: window.innerWidth < 1024 ? '2px' : '10px'
+                gap: window.innerWidth < 1024 ? '0px' : '10px'
               }}>
                 <div style={{
                   fontSize: window.innerWidth < 1024 ? '9px' : '14px',
@@ -1303,7 +1303,7 @@ const App = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: window.innerWidth < 1024 ? '2px' : '10px'
+                gap: window.innerWidth < 1024 ? '0px' : '10px'
               }}>
                 <div style={{
                   fontSize: window.innerWidth < 1024 ? '9px' : '14px',
