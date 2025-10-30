@@ -948,6 +948,7 @@ const App = () => {
                     flexDirection: 'column',
                     gap: '8px',
                     flex: '1 1 auto',
+                    maxHeight: 'calc(100vh - 200px)',
                     overflowY: 'auto',
                     scrollBehavior: 'smooth',
                     marginBottom: '12px'
@@ -1150,7 +1151,7 @@ const App = () => {
                                 style={{
                                   maxWidth: '100%',
                                   height: 'auto',
-                                  maxHeight: '200px',
+                                  maxHeight: '400px',
                                   objectFit: 'contain'
                                 }}
                               />
