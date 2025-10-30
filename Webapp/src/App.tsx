@@ -917,7 +917,7 @@ const App = () => {
                 gap: '0',
                 width: '100%',
                 maxWidth: '700px',
-                height: '100vh',
+                height: window.innerWidth < 1024 ? 'auto' : '100vh',
                 overflowY: 'auto',
                 overflowX: 'hidden',
                 paddingTop: window.innerWidth < 1024 ? '0px' : '20px',
