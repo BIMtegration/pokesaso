@@ -322,6 +322,7 @@ const App = () => {
           padding: 0,
           boxSizing: 'border-box',
           overflow: 'hidden',
+          flexDirection: window.innerWidth < 1024 ? 'column' : 'row'
         }}
       >
         <div
@@ -506,7 +507,7 @@ const App = () => {
           }}
         >
           {/* Panel Central */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: '20px', flexDirection: 'column', gap: 12, overflowY: 'auto' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%', paddingBottom: window.innerWidth < 1024 ? '320px' : 'auto' }}>
             {showCorrectModal ? (
               /* Modal de Acierto */
               <div style={{
@@ -1139,12 +1140,15 @@ const App = () => {
                   width: '100%',
                   maxWidth: '700px',
                   justifyContent: 'center',
-                  flexWrap: 'wrap',
+                  flexWrap: window.innerWidth < 1024 ? 'wrap' : 'wrap',
+                  flexDirection: window.innerWidth < 1024 ? 'column' : 'row',
                   padding: '16px',
                   backgroundColor: '#1e293b',
                   borderTop: '1px solid #334155',
-                  position: 'sticky',
+                  position: 'fixed',
                   bottom: 0,
+                  left: 0,
+                  right: 0,
                   zIndex: 10,
                   boxSizing: 'border-box',
                   flexShrink: 0
@@ -1163,9 +1167,11 @@ const App = () => {
                       background: '#0f172a',
                       color: '#f1f5f9',
                       fontSize: '14px',
-                      minWidth: '300px',
+                      width: window.innerWidth < 1024 ? '100%' : 'auto',
+                      minWidth: window.innerWidth < 1024 ? 'auto' : '300px',
                       outline: 'none',
-                      borderBottom: '2px solid #4ade80'
+                      borderBottom: '2px solid #4ade80',
+                      boxSizing: 'border-box'
                     }}
                   />
                   <button
@@ -1180,7 +1186,8 @@ const App = () => {
                       fontWeight: 'bold',
                       cursor: 'pointer',
                       transition: 'all 200ms',
-                      minWidth: '120px'
+                      minWidth: window.innerWidth < 1024 ? '100%' : '120px',
+                      flex: window.innerWidth < 1024 ? '1' : 'unset'
                     }}
                   >
                     ✓ Adivinar!
@@ -1197,7 +1204,8 @@ const App = () => {
                       fontWeight: 'bold',
                       cursor: 'pointer',
                       transition: 'all 200ms',
-                      minWidth: '140px'
+                      minWidth: window.innerWidth < 1024 ? '100%' : '140px',
+                      flex: window.innerWidth < 1024 ? '1' : 'unset'
                     }}
                   >
                     🔄 Cambiar Pokémon
@@ -1210,35 +1218,38 @@ const App = () => {
           {/* Panel Derecho - Contador de Puntos */}
           {gameState === 'playing' && (
             <div style={{
-              width: '200px',
+              width: window.innerWidth < 1024 ? '100%' : '200px',
+              height: window.innerWidth < 1024 ? 'auto' : '100vh',
               background: '#0b1220',
-              borderLeft: '3px solid #4ade80',
+              borderLeft: window.innerWidth < 1024 ? 'none' : '3px solid #4ade80',
+              borderTop: window.innerWidth < 1024 ? '3px solid #4ade80' : 'none',
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: window.innerWidth < 1024 ? 'row' : 'column',
               alignItems: 'center',
-              justifyContent: 'center',
-              gap: '30px',
-              padding: '20px',
-              boxSizing: 'border-box'
+              justifyContent: window.innerWidth < 1024 ? 'space-around' : 'center',
+              gap: window.innerWidth < 1024 ? '0px' : '30px',
+              padding: window.innerWidth < 1024 ? '12px 8px' : '20px',
+              boxSizing: 'border-box',
+              order: window.innerWidth < 1024 ? -1 : 'unset'
             }}>
               {/* Puntos grandes */}
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '10px'
+                gap: window.innerWidth < 1024 ? '4px' : '10px'
               }}>
                 <div style={{
-                  fontSize: '14px',
+                  fontSize: window.innerWidth < 1024 ? '11px' : '14px',
                   fontWeight: 'bold',
                   color: '#94a3b8',
                   textTransform: 'uppercase',
                   letterSpacing: '1px'
                 }}>
-                  Puntos
+                  Pts
                 </div>
                 <div style={{
-                  fontSize: '64px',
+                  fontSize: window.innerWidth < 1024 ? '28px' : '64px',
                   fontWeight: 'bold',
                   color: '#4ade80',
                   textShadow: '0 0 20px rgba(74, 222, 128, 0.5)',
@@ -1253,10 +1264,10 @@ const App = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '10px'
+                gap: window.innerWidth < 1024 ? '4px' : '10px'
               }}>
                 <div style={{
-                  fontSize: '14px',
+                  fontSize: window.innerWidth < 1024 ? '11px' : '14px',
                   fontWeight: 'bold',
                   color: '#94a3b8',
                   textTransform: 'uppercase',
@@ -1265,7 +1276,7 @@ const App = () => {
                   Tiempo
                 </div>
                 <div style={{
-                  fontSize: '44px',
+                  fontSize: window.innerWidth < 1024 ? '20px' : '44px',
                   fontWeight: 'bold',
                   color: timeLeft <= 30 ? '#ef4444' : '#4ade80',
                   textShadow: timeLeft <= 30 ? '0 0 20px rgba(239, 68, 68, 0.5)' : '0 0 20px rgba(74, 222, 128, 0.5)',
@@ -1281,10 +1292,10 @@ const App = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '10px'
+                gap: window.innerWidth < 1024 ? '4px' : '10px'
               }}>
                 <div style={{
-                  fontSize: '14px',
+                  fontSize: window.innerWidth < 1024 ? '11px' : '14px',
                   fontWeight: 'bold',
                   color: '#94a3b8',
                   textTransform: 'uppercase',
@@ -1293,7 +1304,7 @@ const App = () => {
                   Ronda
                 </div>
                 <div style={{
-                  fontSize: '48px',
+                  fontSize: window.innerWidth < 1024 ? '24px' : '48px',
                   fontWeight: 'bold',
                   color: '#60a5fa',
                   textShadow: '0 0 20px rgba(96, 165, 250, 0.5)'
@@ -1302,7 +1313,8 @@ const App = () => {
                 </div>
               </div>
 
-              {/* Dificultad */}
+              {/* Dificultad - Solo en Desktop */}
+              {window.innerWidth >= 1024 && (
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -1329,8 +1341,10 @@ const App = () => {
                   {difficultyOptions.find(d => d.key === difficulty)?.label}
                 </div>
               </div>
+              )}
 
-              {/* Botón Reiniciar */}
+              {/* Botón Reiniciar - Solo en Desktop */}
+              {window.innerWidth >= 1024 && (
               <button
                 onClick={handleResetGame}
                 style={{
@@ -1349,6 +1363,7 @@ const App = () => {
               >
                 🏠 Reiniciar
               </button>
+              )}
             </div>
           )}
         </div>
