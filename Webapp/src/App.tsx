@@ -948,16 +948,38 @@ const App = () => {
                     flexDirection: 'column',
                     gap: '8px',
                     flex: '1 1 auto',
-                    minHeight: '50px',
+                    minHeight: '200px',
                     overflowY: 'auto',
                     scrollBehavior: 'smooth',
                     marginBottom: '12px'
                   }}
                   className="pistas-scrollable"
                   >
-                    <h3 style={{ marginTop: 0, marginBottom: '8px', fontSize: '16px', color: '#4ade80', textAlign: 'center' }}>
-                      💡 PISTAS
-                    </h3>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '12px' }}>
+                      <h3 style={{ marginTop: 0, marginBottom: 0, fontSize: '16px', color: '#4ade80', textAlign: 'center', flex: 1 }}>
+                        💡 PISTAS
+                      </h3>
+                      {feedback && (
+                        <div style={{
+                          padding: '6px 10px',
+                          borderRadius: '6px',
+                          border: '1px solid ' + (feedback.includes('correcto') ? '#4ade80' : '#ef4444'),
+                          backgroundColor: feedback.includes('correcto') ? 'rgba(74, 222, 128, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                          color: feedback.includes('correcto') ? '#4ade80' : '#ef4444',
+                          fontSize: '11px',
+                          fontWeight: 'bold',
+                          textAlign: 'center',
+                          whiteSpace: 'nowrap',
+                          minHeight: 'auto',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0
+                        }}>
+                          {feedback}
+                        </div>
+                      )}
+                    </div>
 
                     {/* Pista 1: Apodo, Descripción, Flavor */}
                     {hintLevel >= 0 && (
@@ -1338,28 +1360,6 @@ const App = () => {
                   {difficultyOptions.find(d => d.key === difficulty)?.label}
                 </div>
               </div>
-
-              {/* Feedback Toast */}
-              {feedback && (
-                <div style={{
-                  padding: '12px 16px',
-                  borderRadius: '8px',
-                  border: '2px solid ' + (feedback.includes('correcto') ? '#4ade80' : '#ef4444'),
-                  backgroundColor: feedback.includes('correcto') ? 'rgba(74, 222, 128, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                  color: feedback.includes('correcto') ? '#4ade80' : '#ef4444',
-                  fontSize: '13px',
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                  marginTop: '20px',
-                  width: '90%',
-                  minHeight: '40px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  {feedback}
-                </div>
-              )}
 
               {/* Botón Reiniciar */}
               <button
