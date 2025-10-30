@@ -920,7 +920,7 @@ const App = () => {
                 height: '100vh',
                 overflowY: 'auto',
                 overflowX: 'hidden',
-                paddingTop: '20px',
+                paddingTop: window.innerWidth < 1024 ? '0px' : '20px',
                 boxSizing: 'border-box'
               }}>
                 {/* Título */}
@@ -930,7 +930,7 @@ const App = () => {
                   color: '#ff6b6b',
                   textShadow: '0 0 10px rgba(255, 107, 107, 0.5)',
                   marginTop: 0,
-                  marginBottom: '20px',
+                  marginBottom: window.innerWidth < 1024 ? '8px' : '20px',
                   textAlign: 'center',
                   flexShrink: 0
                 }}>
