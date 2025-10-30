@@ -19,6 +19,7 @@ const App = () => {
   const continueButtonRef = useRef<HTMLButtonElement | null>(null);
   const startGameButtonRef = useRef<HTMLButtonElement | null>(null);
   const easterEggButtonRef = useRef<HTMLButtonElement | null>(null);
+  const nextPokemonButtonRef = useRef<HTMLButtonElement | null>(null);
   const [gameState, setGameState] = useState<'init' | 'config' | 'playing' | 'reveal' | 'guessed'>('init');
   const [currentCard, setCurrentCard] = useState<any>(null);
   const [cards, setCards] = useState<any[] | null>(null);
@@ -123,6 +124,15 @@ const App = () => {
       }, 100);
     }
   }, [showEasterEggModal]);
+
+  // Focus en el botón "Siguiente Pokémon" cuando sale el modal de No adivinaste
+  useEffect(() => {
+    if (showWrongGuessModal) {
+      setTimeout(() => {
+        nextPokemonButtonRef.current?.focus();
+      }, 100);
+    }
+  }, [showWrongGuessModal]);
 
   const leftVisible = Boolean(currentCard && (revealedCard || showWrongGuessModal));
 
@@ -592,10 +602,14 @@ const App = () => {
                 </div>
 
                 <button
+                  ref={nextPokemonButtonRef}
                   onClick={() => {
                     setShowWrongGuessModal(false);
                     setRevealedCard(false);
                     handleNextCard();
+                    setTimeout(() => {
+                      inputRef.current?.focus();
+                    }, 100);
                   }}
                   style={{
                     padding: '14px 40px',
@@ -901,10 +915,9 @@ const App = () => {
                 width: '100%',
                 maxWidth: '700px',
                 height: '100vh',
-                overflowY: 'hidden',
+                overflowY: 'auto',
                 overflowX: 'hidden',
                 paddingTop: '20px',
-                paddingBottom: '20px',
                 boxSizing: 'border-box'
               }}>
                 {/* Título */}
@@ -936,9 +949,9 @@ const App = () => {
                     gap: '8px',
                     flex: '1 1 auto',
                     minHeight: '50px',
-                    maxHeight: 'calc(100vh - 300px)',
                     overflowY: 'auto',
-                    scrollBehavior: 'smooth'
+                    scrollBehavior: 'smooth',
+                    marginBottom: '12px'
                   }}
                   className="pistas-scrollable"
                   >
@@ -1133,9 +1146,10 @@ const App = () => {
                   display: 'flex',
                   gap: '10px',
                   width: '100%',
+                  maxWidth: '700px',
                   justifyContent: 'center',
                   flexWrap: 'wrap',
-                  padding: '16px 0',
+                  padding: '16px',
                   backgroundColor: '#1e293b',
                   borderTop: '1px solid #334155',
                   position: 'sticky',
