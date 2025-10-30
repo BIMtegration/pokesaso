@@ -934,29 +934,26 @@ const App = () => {
                   ¡¿Quién es ese Pokémon?!
                 </h1>
 
-                {/* Pistas Acordeón - Crece con su contenido */}
+                {/* Pistas con Pestañas (Tabs) */}
                 {currentCard && (
                   <div style={{
                     background: '#0f172a',
                     border: '2px solid #4ade80',
                     borderRadius: '12px',
-                    padding: '16px',
                     width: '100%',
                     maxWidth: '700px',
                     boxSizing: 'border-box',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '8px',
                     flex: '1 1 auto',
                     maxHeight: 'calc(100vh - 120px)',
-                    overflowY: 'auto',
-                    scrollBehavior: 'smooth',
-                    marginBottom: '12px'
+                    marginBottom: '12px',
+                    overflow: 'hidden'
                   }}
-                  className="pistas-scrollable"
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '12px' }}>
-                      <h3 style={{ marginTop: 0, marginBottom: 0, fontSize: '16px', color: '#4ade80', textAlign: 'center', flex: 1 }}>
+                    {/* Header con título y feedback */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', padding: '12px 16px', borderBottom: '2px solid #334155' }}>
+                      <h3 style={{ marginTop: 0, marginBottom: 0, fontSize: '16px', color: '#4ade80', flex: 1 }}>
                         💡 PISTAS
                       </h3>
                       {feedback && (
@@ -968,12 +965,7 @@ const App = () => {
                           color: feedback.includes('correcto') ? '#4ade80' : '#ef4444',
                           fontSize: '11px',
                           fontWeight: 'bold',
-                          textAlign: 'center',
                           whiteSpace: 'nowrap',
-                          minHeight: 'auto',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
                           flexShrink: 0
                         }}>
                           {feedback}
@@ -981,185 +973,162 @@ const App = () => {
                       )}
                     </div>
 
-                    {/* Pista 1: Apodo, Descripción, Flavor */}
-                    {hintLevel >= 0 && (
-                      <div style={{
-                        background: '#1e293b',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
-                        overflow: 'hidden'
-                      }}>
+                    {/* Tab Buttons */}
+                    <div style={{ display: 'flex', gap: '2px', padding: '8px', background: '#1e293b', borderBottom: '1px solid #334155', overflowX: 'auto' }}>
+                      {hintLevel >= 0 && (
                         <button
-                          onClick={() => setExpandedHint(expandedHint === 0 ? null : 0)}
+                          onClick={() => setExpandedHint(0)}
                           style={{
-                            width: '100%',
-                            padding: '16px 20px',
+                            padding: '10px 16px',
                             background: expandedHint === 0 ? '#334155' : '#0f172a',
-                            border: 'none',
+                            border: expandedHint === 0 ? '2px solid #fbbf24' : '1px solid #334155',
+                            borderRadius: '6px',
                             color: '#fbbf24',
-                            fontSize: '15px',
+                            fontSize: '14px',
                             fontWeight: 'bold',
                             cursor: 'pointer',
-                            textAlign: 'left',
-                            transition: 'all 200ms'
+                            transition: 'all 200ms',
+                            whiteSpace: 'nowrap',
+                            flexShrink: 0
                           }}
                         >
-                          🔸 Pista 1: Apodo & Descripción {expandedHint === 0 ? '▼' : '▶'}
+                          🔸 P1
                         </button>
-                        {expandedHint === 0 && (
-                          <div style={{ padding: '12px', background: '#0f172a', borderTop: '1px solid #334155', fontSize: '12px', color: '#cbd5e1' }}>
-                            <p style={{ marginTop: 0, marginBottom: '6px', fontWeight: 'bold', color: '#fbbf24' }}>{currentCard.apodo}</p>
-                            <p style={{ marginTop: 0, marginBottom: '6px', lineHeight: '1.4' }}>{currentCard.description}</p>
-                            <p style={{ marginTop: 0, marginBottom: 0, fontSize: '11px', color: '#94a3b8', fontStyle: 'italic' }}>"{currentCard.flavorText}"</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Pista 2: Tipo */}
-                    {hintLevel >= 1 && (
-                      <div style={{
-                        background: '#1e293b',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
-                        overflow: 'hidden'
-                      }}>
+                      )}
+                      {hintLevel >= 1 && (
                         <button
-                          onClick={() => setExpandedHint(expandedHint === 1 ? null : 1)}
+                          onClick={() => setExpandedHint(1)}
                           style={{
-                            width: '100%',
-                            padding: '16px 20px',
+                            padding: '10px 16px',
                             background: expandedHint === 1 ? '#334155' : '#0f172a',
-                            border: 'none',
+                            border: expandedHint === 1 ? '2px solid #38bdf8' : '1px solid #334155',
+                            borderRadius: '6px',
                             color: '#38bdf8',
-                            fontSize: '15px',
+                            fontSize: '14px',
                             fontWeight: 'bold',
                             cursor: 'pointer',
-                            textAlign: 'left',
-                            transition: 'all 200ms'
+                            transition: 'all 200ms',
+                            whiteSpace: 'nowrap',
+                            flexShrink: 0
                           }}
                         >
-                          🔵 Pista 2: Tipo {expandedHint === 1 ? '▼' : '▶'}
+                          🔵 P2
                         </button>
-                        {expandedHint === 1 && (
-                          <div style={{ padding: '12px', background: '#0f172a', borderTop: '1px solid #334155', fontSize: '13px', color: '#e2e8f0' }}>
-                            <span style={{ color: '#60a5fa', fontWeight: 'bold' }}>{currentCard.type}</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Pista 3: Evolución */}
-                    {hintLevel >= 2 && (
-                      <div style={{
-                        background: '#1e293b',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
-                        overflow: 'hidden'
-                      }}>
+                      )}
+                      {hintLevel >= 2 && (
                         <button
-                          onClick={() => setExpandedHint(expandedHint === 2 ? null : 2)}
+                          onClick={() => setExpandedHint(2)}
                           style={{
-                            width: '100%',
-                            padding: '16px 20px',
+                            padding: '10px 16px',
                             background: expandedHint === 2 ? '#334155' : '#0f172a',
-                            border: 'none',
+                            border: expandedHint === 2 ? '2px solid #f87171' : '1px solid #334155',
+                            borderRadius: '6px',
                             color: '#f87171',
-                            fontSize: '15px',
+                            fontSize: '14px',
                             fontWeight: 'bold',
                             cursor: 'pointer',
-                            textAlign: 'left',
-                            transition: 'all 200ms'
+                            transition: 'all 200ms',
+                            whiteSpace: 'nowrap',
+                            flexShrink: 0
                           }}
                         >
-                          🔴 Pista 3: Evolución {expandedHint === 2 ? '▼' : '▶'}
+                          🔴 P3
                         </button>
-                        {expandedHint === 2 && (
-                          <div style={{ padding: '12px', background: '#0f172a', borderTop: '1px solid #334155', fontSize: '13px', color: '#e2e8f0' }}>
-                            {currentCard.preEvolution && <div>← {currentCard.preEvolution}</div>}
-                            {currentCard.evolution && <div>→ {currentCard.evolution}</div>}
-                            {!currentCard.preEvolution && !currentCard.evolution && <div>Sin evoluciones</div>}
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Pista 4: Primera Sílaba */}
-                    {hintLevel >= 3 && (
-                      <div style={{
-                        background: '#1e293b',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
-                        overflow: 'hidden'
-                      }}>
+                      )}
+                      {hintLevel >= 3 && (
                         <button
-                          onClick={() => setExpandedHint(expandedHint === 3 ? null : 3)}
+                          onClick={() => setExpandedHint(3)}
                           style={{
-                            width: '100%',
-                            padding: '16px 20px',
+                            padding: '10px 16px',
                             background: expandedHint === 3 ? '#334155' : '#0f172a',
-                            border: 'none',
+                            border: expandedHint === 3 ? '2px solid #86efac' : '1px solid #334155',
+                            borderRadius: '6px',
                             color: '#86efac',
-                            fontSize: '15px',
+                            fontSize: '14px',
                             fontWeight: 'bold',
                             cursor: 'pointer',
-                            textAlign: 'left',
-                            transition: 'all 200ms'
+                            transition: 'all 200ms',
+                            whiteSpace: 'nowrap',
+                            flexShrink: 0
                           }}
                         >
-                          🟢 Pista 4: Primera Sílaba {expandedHint === 3 ? '▼' : '▶'}
+                          🟢 P4
                         </button>
-                        {expandedHint === 3 && (
-                          <div style={{ padding: '12px', background: '#0f172a', borderTop: '1px solid #334155', fontSize: '13px', color: '#e2e8f0' }}>
-                            Empieza con: <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#fbbf24' }}>"{currentCard.name.split('')[0]}{currentCard.name.split('')[1] || ''}"</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Pista 5: Imagen del Pokémon */}
-                    {hintLevel >= 4 && (
-                      <div style={{
-                        background: '#1e293b',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
-                        overflow: 'hidden'
-                      }}>
+                      )}
+                      {hintLevel >= 4 && (
                         <button
-                          onClick={() => setExpandedHint(expandedHint === 4 ? null : 4)}
+                          onClick={() => setExpandedHint(4)}
                           style={{
-                            width: '100%',
-                            padding: '16px 20px',
+                            padding: '10px 16px',
                             background: expandedHint === 4 ? '#334155' : '#0f172a',
-                            border: 'none',
+                            border: expandedHint === 4 ? '2px solid #d8b4fe' : '1px solid #334155',
+                            borderRadius: '6px',
                             color: '#d8b4fe',
-                            fontSize: '15px',
+                            fontSize: '14px',
                             fontWeight: 'bold',
                             cursor: 'pointer',
-                            textAlign: 'left',
-                            transition: 'all 200ms'
+                            transition: 'all 200ms',
+                            whiteSpace: 'nowrap',
+                            flexShrink: 0
                           }}
                         >
-                          🟣 Pista 5: Imagen Parcial {expandedHint === 4 ? '▼' : '▶'}
+                          🟣 P5
                         </button>
-                        {expandedHint === 4 && (
-                          <div style={{ padding: '12px', background: '#0f172a', borderTop: '1px solid #334155', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'auto', maxHeight: 'none' }}>
-                            {currentCard.imageUrl && (
-                              <img
-                                src={currentCard.imageUrl}
-                                alt="Pokemon"
-                                style={{
-                                  maxWidth: '100%',
-                                  height: 'auto',
-                                  maxHeight: '200px',
-                                  objectFit: 'contain'
-                                }}
-                              />
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    )}
+                      )}
+                    </div>
+
+                    {/* Tab Content */}
+                    <div style={{ padding: '16px', background: '#0f172a', overflowY: 'auto', flex: '1 1 auto' }}>
+                      {/* Pista 1 */}
+                      {expandedHint === 0 && hintLevel >= 0 && (
+                        <div style={{ fontSize: '14px', color: '#cbd5e1' }}>
+                          <p style={{ marginTop: 0, marginBottom: '12px', fontWeight: 'bold', color: '#fbbf24', fontSize: '16px' }}>{currentCard.apodo}</p>
+                          <p style={{ marginTop: 0, marginBottom: '12px', lineHeight: '1.6' }}>{currentCard.description}</p>
+                          <p style={{ marginTop: 0, marginBottom: 0, fontSize: '13px', color: '#94a3b8', fontStyle: 'italic' }}>"{currentCard.flavorText}"</p>
+                        </div>
+                      )}
+
+                      {/* Pista 2 */}
+                      {expandedHint === 1 && hintLevel >= 1 && (
+                        <div style={{ fontSize: '16px', color: '#e2e8f0' }}>
+                          <span style={{ color: '#38bdf8', fontWeight: 'bold' }}>{currentCard.type}</span>
+                        </div>
+                      )}
+
+                      {/* Pista 3 */}
+                      {expandedHint === 2 && hintLevel >= 2 && (
+                        <div style={{ fontSize: '15px', color: '#e2e8f0' }}>
+                          {currentCard.preEvolution && <div style={{ marginBottom: '8px' }}>← Anterior: {currentCard.preEvolution}</div>}
+                          {currentCard.evolution && <div>→ Siguiente: {currentCard.evolution}</div>}
+                          {!currentCard.preEvolution && !currentCard.evolution && <div>Sin evoluciones</div>}
+                        </div>
+                      )}
+
+                      {/* Pista 4 */}
+                      {expandedHint === 3 && hintLevel >= 3 && (
+                        <div style={{ fontSize: '15px', color: '#e2e8f0' }}>
+                          Empieza con: <span style={{ fontWeight: 'bold', fontSize: '18px', color: '#86efac' }}>"{currentCard.name.split('')[0]}{currentCard.name.split('')[1] || ''}"</span>
+                        </div>
+                      )}
+
+                      {/* Pista 5 */}
+                      {expandedHint === 4 && hintLevel >= 4 && (
+                        <div style={{ textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '150px' }}>
+                          {currentCard.imageUrl && (
+                            <img
+                              src={currentCard.imageUrl}
+                              alt="Pokemon"
+                              style={{
+                                maxWidth: '100%',
+                                height: 'auto',
+                                maxHeight: '200px',
+                                objectFit: 'contain'
+                              }}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
 
