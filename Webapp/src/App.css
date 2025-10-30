@@ -1,0 +1,315 @@
+/* --- Modo oscuro automático y manual --- */
+html, body, #root {
+  height: 100vh;
+  width: 100vw;
+  min-height: 100vh;
+  min-width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #d3d6df 0%, #bfc8d6 100%);
+  color: #232946;
+}
+
+.main-layout {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  min-width: 100vw;
+  overflow: hidden;
+}
+
+.side-panel {
+  width: 340px;
+  min-width: 340px;
+  max-width: 340px;
+  background: #181c2b;
+  color: #fff;
+  border-right: 2px solid #222;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem 1.1rem;
+  font-size: 0.85rem;
+  font-family: monospace;
+  overflow-y: auto;
+}
+.side-panel.right {
+  border-left: 2px solid #222;
+  border-right: none;
+  gap: 18px;
+  justify-content: flex-start;
+}
+
+.game-container {
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+  max-height: 100vh;
+  background: #e0e2e8;
+  color: #232946;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding-bottom: 32px;
+  box-shadow: 0 4px 32px 0 rgba(80, 0, 120, 0.07);
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background: #222;
+  padding: 32px;
+  border-radius: 12px;
+  min-width: 320px;
+  color: #fff;
+  box-shadow: 0 2px 16px #0008;
+}
+
+/* Pokeball loader animation */
+.pokeball-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pokeball {
+/* Pantalla completa y sin scroll */
+html, body, #root {
+  height: 100dvh;
+  width: 100dvw;
+  min-height: 100dvh;
+  min-width: 100dvw;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #d3d6df 0%, #bfc8d6 100%);
+}
+
+.game-container {
+  min-height: 100dvh;
+  min-width: 100dvw;
+  height: 100dvh;
+  width: 100dvw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 520px;
+  min-width: 340px;
+  box-sizing: border-box;
+  background: #e0e2e8;
+  color: #232946;
+  box-shadow: 0 4px 32px 0 rgba(80, 0, 120, 0.07);
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  color: #5f27cd;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 8px #e0c3fc44;
+}
+
+.score-board {
+  color: #009688;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  background: #e0f2f1;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  box-shadow: 0 1px 4px #b2dfdb33;
+}
+
+.hint-panel {
+  color: #232946;
+  background: #ffe3e3;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+  box-shadow: 0 1px 4px #ffb8b833;
+  border: 1px solid #ffb8b8;
+}
+
+button {
+  background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+  color: #232946;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: 0 2px 8px #38f9d733;
+}
+button:hover {
+  background: linear-gradient(90deg, #38f9d7 0%, #43e97b 100%);
+  color: #5f27cd;
+}
+
+.history-panel {
+  background: #b7b0d8;
+  border: 1px solid #8a7fc7;
+  border-radius: 12px;
+  margin: 0 auto 1.2rem auto;
+  padding: 1rem 1.5rem;
+  max-width: 520px;
+  box-shadow: 0 1px 8px #8a7fc722;
+  color: #232946;
+}
+.history-panel h2 {
+  color: #5f27cd;
+  font-size: 1.2rem;
+  margin-bottom: 0.8rem;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+.history-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+.history-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #e0f7fa;
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  min-width: 90px;
+  box-shadow: 0 1px 4px #00968822;
+  color: #232946;
+}
+.history-img {
+  width: 60px;
+  height: 84px;
+  object-fit: contain;
+  border-radius: 4px;
+  margin-bottom: 0.3rem;
+  background: #fff;
+  border: 1px solid #b388ff;
+  box-shadow: 0 1px 4px #b388ff33;
+}
+.history-name {
+  font-size: 0.95rem;
+  color: #009688;
+  text-align: center;
+  margin-top: 0.2rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Efecto confeti (canvas overlay) */
+.confetti-canvas {
+  position: fixed;
+  pointer-events: none;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: 3000;
+}
+
+/* Shake animation para error */
+.shake {
+  animation: shakeAnim 0.4s cubic-bezier(.36,.07,.19,.97) both;
+}
+@keyframes shakeAnim {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-8px); }
+  40%, 60% { transform: translateX(8px); }
+}
+
+/* Transición suave entre cartas */
+.card-fade {
+  animation: cardFadeIn 0.5s cubic-bezier(.23,1.12,.62,1.01);
+}
+@keyframes cardFadeIn {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .game-container {
+    flex-direction: column;
+    min-width: 100vw;
+    min-height: 100vh;
+    padding: 0;
+  }
+  .history-panel {
+    max-width: 98vw;
+    padding: 0.7rem 0.5rem;
+  }
+}
+@media (max-width: 700px) {
+  .game-container {
+    min-width: 100vw;
+    min-height: 100vh;
+    padding: 0;
+  }
+  .history-panel {
+    max-width: 99vw;
+    padding: 0.5rem 0.2rem;
+  }
+  .score-board {
+    font-size: 1rem;
+    padding: 0.4rem 0.7rem;
+  }
+  .hint-panel {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.7rem;
+  }
+  button {
+    font-size: 1.05rem;
+    padding: 0.5rem 1rem;
+  }
+}
+@media (max-width: 500px) {
+  .game-container {
+    min-width: 100vw;
+    min-height: 100vh;
+    padding: 0;
+  }
+  .history-panel {
+    max-width: 100vw;
+    padding: 0.3rem 0.1rem;
+    font-size: 0.95rem;
+  }
+  .score-board {
+    font-size: 0.95rem;
+    padding: 0.3rem 0.5rem;
+  }
+  .hint-panel {
+    font-size: 0.9rem;
+    padding: 0.3rem 0.5rem;
+  }
+  button {
+    font-size: 0.98rem;
+    padding: 0.4rem 0.7rem;
+  }
+  .history-img {
+    width: 44px;
+    height: 62px;
+  }
+}

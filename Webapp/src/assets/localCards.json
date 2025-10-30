@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Charizard",
+    "imageUrl": "https://images.pokemontcg.io/base1/4.png",
+    "description": "Lanza fuego que puede derretir cualquier cosa.",
+    "type": "Fire",
+    "attacks": ["Fire Spin", "Flamethrower"],
+    "evolution": "Charmeleon",
+    "ability": "Blaze",
+    "history": "Base Set"
+  },
+  {
+    "name": "Blastoise",
+    "imageUrl": "https://images.pokemontcg.io/base1/2.png",
+    "description": "Puede lanzar chorros de agua a presión.",
+    "type": "Water",
+    "attacks": ["Hydro Pump", "Bubblebeam"],
+    "evolution": "Wartortle",
+    "ability": "Torrent",
+    "history": "Base Set"
+  },
+  {
+    "name": "Venusaur",
+    "imageUrl": "https://images.pokemontcg.io/base1/15.png",
+    "description": "La flor de su lomo absorbe energía solar.",
+    "type": "Grass",
+    "attacks": ["Solarbeam", "Vine Whip"],
+    "evolution": "Ivysaur",
+    "ability": "Overgrow",
+    "history": "Base Set"
+  }
+
+]
