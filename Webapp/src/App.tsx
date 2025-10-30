@@ -1035,7 +1035,7 @@ const App = () => {
                     gap: '8px',
                     flex: '1 1 auto',
                     minHeight: '50px',
-                    height: '100%',
+                    maxHeight: 'calc(100vh - 300px)',
                     overflowY: 'auto',
                     scrollBehavior: 'smooth'
                   }}
@@ -1207,7 +1207,7 @@ const App = () => {
                           🟣 Pista 5: Imagen {expandedHint === 4 ? '▼' : '▶'}
                         </button>
                         {expandedHint === 4 && (
-                          <div style={{ padding: '12px', background: '#0f172a', borderTop: '1px solid #334155', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '140px' }}>
+                          <div style={{ padding: '12px', background: '#0f172a', borderTop: '1px solid #334155', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'auto', maxHeight: 'none' }}>
                             {currentCard.imageUrl && (
                               <img
                                 src={currentCard.imageUrl}
@@ -1215,7 +1215,7 @@ const App = () => {
                                 style={{
                                   maxWidth: '100%',
                                   height: 'auto',
-                                  maxHeight: '120px',
+                                  maxHeight: '200px',
                                   objectFit: 'contain'
                                 }}
                               />
