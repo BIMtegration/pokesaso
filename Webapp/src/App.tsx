@@ -349,16 +349,17 @@ const App = () => {
               background: '#0b1220',
               borderRadius: '8px',
               border: '2px solid #4ade80',
-              padding: '24px',
+              padding: '12px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '8px',
+              gap: '4px',
               fontSize: '12px',
               lineHeight: '1.2',
               width: '100%',
               maxHeight: '100vh',
               height: 'fit-content',
-              margin: '16px'
+              margin: '8px',
+              overflow: 'auto'
             }}>
               {/* Número Pokédex */}
               <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#fbbf24' }}>
@@ -1134,26 +1135,28 @@ const App = () => {
                   </div>
                 )}
 
-                {/* Input y Botones - Fixed al fondo */}
+                {/* Input y Botones - Fixed en móvil, Sticky en desktop */}
                 <div style={{
                   display: 'flex',
                   gap: '10px',
-                  width: '100%',
+                  width: window.innerWidth < 1024 ? '100%' : '100%',
                   justifyContent: 'center',
                   alignItems: 'center',
                   flexWrap: window.innerWidth < 1024 ? 'wrap' : 'wrap',
                   flexDirection: window.innerWidth < 1024 ? 'column' : 'row',
                   padding: window.innerWidth < 1024 ? '12px' : '16px',
-                  backgroundColor: window.innerWidth < 1024 ? '#1e293b' : '#1e293b',
-                  borderTop: window.innerWidth < 1024 ? '1px solid #334155' : '1px solid #334155',
-                  position: 'fixed',
+                  backgroundColor: '#1e293b',
+                  borderTop: '1px solid #334155',
+                  position: window.innerWidth < 1024 ? 'fixed' : 'sticky',
                   bottom: 0,
-                  left: 0,
-                  right: 0,
-                  zIndex: 100,
+                  left: window.innerWidth < 1024 ? 0 : 'auto',
+                  right: window.innerWidth < 1024 ? 0 : 'auto',
+                  zIndex: window.innerWidth < 1024 ? 100 : 10,
                   boxSizing: 'border-box',
                   flexShrink: 0,
-                  maxWidth: 'none'
+                  maxWidth: 'none',
+                  marginLeft: window.innerWidth < 1024 ? 0 : 'auto',
+                  marginRight: window.innerWidth < 1024 ? 0 : 'auto'
                 }}>
                   <input
                     ref={inputRef}
@@ -1229,15 +1232,16 @@ const App = () => {
               display: 'flex',
               flexDirection: window.innerWidth < 1024 ? 'row' : 'column',
               alignItems: 'center',
-              justifyContent: window.innerWidth < 1024 ? 'space-around' : 'center',
-              gap: window.innerWidth < 1024 ? '2px' : '30px',
-              padding: window.innerWidth < 1024 ? '4px 6px' : '20px',
+              justifyContent: window.innerWidth < 1024 ? 'space-around' : 'flex-start',
+              gap: window.innerWidth < 1024 ? '2px' : '16px',
+              padding: window.innerWidth < 1024 ? '4px 6px' : '12px',
               boxSizing: 'border-box',
               position: window.innerWidth < 1024 ? 'fixed' : 'relative',
               top: window.innerWidth < 1024 ? 0 : 'auto',
               left: window.innerWidth < 1024 ? 0 : 'auto',
               right: window.innerWidth < 1024 ? 0 : 'auto',
-              zIndex: window.innerWidth < 1024 ? 5 : 'auto'
+              zIndex: window.innerWidth < 1024 ? 5 : 'auto',
+              overflowY: window.innerWidth < 1024 ? 'visible' : 'auto'
             }}>
               {/* Puntos grandes */}
               <div style={{
