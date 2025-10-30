@@ -507,7 +507,7 @@ const App = () => {
           }}
         >
           {/* Panel Central */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', paddingTop: window.innerWidth < 1024 ? '80px' : '20px', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%', paddingBottom: window.innerWidth < 1024 ? '320px' : 'auto' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '12px' : '20px', paddingTop: window.innerWidth < 1024 ? '80px' : '20px', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%', paddingBottom: window.innerWidth < 1024 ? '280px' : 'auto' }}>
             {showCorrectModal ? (
               /* Modal de Acierto */
               <div style={{
@@ -1137,7 +1137,7 @@ const App = () => {
                 <div style={{
                   display: 'flex',
                   gap: '10px',
-                  width: '100%',
+                  width: window.innerWidth < 1024 ? '100%' : '100%',
                   maxWidth: '700px',
                   justifyContent: 'center',
                   flexWrap: window.innerWidth < 1024 ? 'wrap' : 'wrap',
@@ -1145,9 +1145,11 @@ const App = () => {
                   padding: '16px',
                   backgroundColor: '#1e293b',
                   borderTop: '1px solid #334155',
-                  position: 'sticky',
+                  position: window.innerWidth < 1024 ? 'fixed' : 'sticky',
                   bottom: 0,
-                  zIndex: 10,
+                  left: window.innerWidth < 1024 ? 0 : 'auto',
+                  right: window.innerWidth < 1024 ? 0 : 'auto',
+                  zIndex: window.innerWidth < 1024 ? 100 : 10,
                   boxSizing: 'border-box',
                   flexShrink: 0
                 }}>
