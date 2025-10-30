@@ -509,7 +509,7 @@ const App = () => {
           }}
         >
           {/* Panel Central */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', padding: window.innerWidth < 1024 ? '0px' : '20px', paddingTop: window.innerWidth < 1024 ? '0px' : '20px', paddingBottom: window.innerWidth < 1024 ? '200px' : '0', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '0px' : '20px', paddingTop: window.innerWidth < 1024 ? '0px' : '20px', paddingBottom: window.innerWidth < 1024 ? '200px' : '0', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%' }}>
             {showCorrectModal ? (
               /* Modal de Acierto */
               <div style={{
