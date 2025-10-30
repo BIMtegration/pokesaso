@@ -259,7 +259,11 @@ const App = () => {
 
   useEffect(() => {
     let mounted = true;
-    fetch('/localCards.enriched.filled.json')
+    // Usar import.meta.url para resolver la ruta correcta en GitHub Pages
+    const basePath = import.meta.env.BASE_URL || '/';
+    const cardsPath = `${basePath}localCards.enriched.filled.json`;
+    
+    fetch(cardsPath)
       .then(r => r.json())
       .then((j) => {
         if (!mounted) return;
