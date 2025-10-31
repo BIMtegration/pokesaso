@@ -326,176 +326,179 @@ const App = () => {
           background: '#1e293b'
         }}
       >
-        <div
-          className="side-panel"
-          style={{
-            flex: leftVisible ? '0 0 25%' : '0 0 0%',
-            background: '#0b1220',
-            color: '#f1f5f9',
-            padding: leftVisible ? 8 : 0,
-            borderRadius: 0,
-            overflow: 'hidden',
-            visibility: leftVisible ? 'visible' : 'hidden',
-            transition: 'all 300ms ease',
-            minWidth: 0,
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          {currentCard && (
-            <div style={{
+        {/* Side panel - solo en desktop */}
+        {window.innerWidth >= 1024 && (
+          <div
+            className="side-panel"
+            style={{
+              flex: leftVisible ? '0 0 25%' : '0 0 0%',
               background: '#0b1220',
-              borderRadius: '8px',
-              border: '2px solid #4ade80',
-              padding: '12px',
+              color: '#f1f5f9',
+              padding: leftVisible ? 8 : 0,
+              borderRadius: 0,
+              overflow: 'hidden',
+              visibility: leftVisible ? 'visible' : 'hidden',
+              transition: 'all 300ms ease',
+              minWidth: 0,
+              height: '100vh',
               display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-              fontSize: '12px',
-              lineHeight: '1.2',
-              width: '100%',
-              maxHeight: '100vh',
-              height: 'fit-content',
-              margin: '8px',
-              overflow: 'auto'
-            }}>
-              {/* Número Pokédex */}
-              <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#fbbf24' }}>
-                Nº Pokédex: {currentCard.numPokedex}
-              </div>
-
-              {/* Imagen */}
-              {currentCard.imageUrl && (
-                <div style={{
-                  textAlign: 'center',
-                  minHeight: '160px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <img
-                    src={currentCard.imageUrl}
-                    alt={currentCard.name}
-                    style={{
-                      maxWidth: '100%',
-                      height: 'auto',
-                      maxHeight: '160px',
-                      objectFit: 'contain'
-                    }}
-                  />
-                </div>
-              )}
-
-              {/* Nombre, Tipo, Apodo */}
-              <div>
-                <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#e2e8f0' }}>
-                  Nombre: <span style={{ color: '#4ade80' }}>{currentCard.name}</span>
-                </div>
-                <div style={{ fontSize: '13px', color: '#cbd5e1' }}>
-                  Apodo: <span style={{ color: '#fbbf24' }}>{currentCard.apodo}</span>
-                </div>
-                <div style={{ fontSize: '13px', color: '#cbd5e1' }}>
-                  Tipo: <span style={{ color: '#60a5fa' }}>{currentCard.type}</span>
-                </div>
-              </div>
-
-              {/* Descripción y Flavor */}
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {currentCard && (
               <div style={{
+                background: '#0b1220',
+                borderRadius: '8px',
+                border: '2px solid #4ade80',
+                padding: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
                 fontSize: '12px',
-                color: '#cbd5e1',
-                lineHeight: '1.4',
-                borderTop: '1px solid #334155',
-                borderBottom: '1px solid #334155',
-                paddingTop: '6px',
-                paddingBottom: '6px'
+                lineHeight: '1.2',
+                width: '100%',
+                maxHeight: '100vh',
+                height: 'fit-content',
+                margin: '8px',
+                overflow: 'auto'
               }}>
-                <div style={{ marginBottom: '4px' }}>{currentCard.description}</div>
-                {currentCard.flavorText && (
-                  <div style={{ fontSize: '11px', color: '#94a3b8', fontStyle: 'italic' }}>
-                    "{currentCard.flavorText}"
+                {/* Número Pokédex */}
+                <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#fbbf24' }}>
+                  Nº Pokédex: {currentCard.numPokedex}
+                </div>
+
+                {/* Imagen */}
+                {currentCard.imageUrl && (
+                  <div style={{
+                    textAlign: 'center',
+                    minHeight: '160px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <img
+                      src={currentCard.imageUrl}
+                      alt={currentCard.name}
+                      style={{
+                        maxWidth: '100%',
+                        height: 'auto',
+                        maxHeight: '160px',
+                        objectFit: 'contain'
+                      }}
+                    />
                   </div>
                 )}
-              </div>
 
-              {/* Habilidad y Stats en grid */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '8px',
-                fontSize: '11px'
-              }}>
-                {/* Habilidad */}
+                {/* Nombre, Tipo, Apodo */}
                 <div>
-                  <div style={{ color: '#94a3b8', fontSize: '10px', marginBottom: '2px' }}>HABILIDAD</div>
-                  <div style={{ color: '#fbbf24', fontWeight: 'bold', fontSize: '12px' }}>{currentCard.ability}</div>
+                  <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#e2e8f0' }}>
+                    Nombre: <span style={{ color: '#4ade80' }}>{currentCard.name}</span>
+                  </div>
+                  <div style={{ fontSize: '13px', color: '#cbd5e1' }}>
+                    Apodo: <span style={{ color: '#fbbf24' }}>{currentCard.apodo}</span>
+                  </div>
+                  <div style={{ fontSize: '13px', color: '#cbd5e1' }}>
+                    Tipo: <span style={{ color: '#60a5fa' }}>{currentCard.type}</span>
+                  </div>
                 </div>
 
-                {/* Stats compacto */}
-                {currentCard.base && (
-                  <div>
-                    <div style={{ color: '#94a3b8', fontSize: '10px', marginBottom: '2px' }}>STATS</div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '3px' }}>
-                      {Object.entries(currentCard.base).slice(0, 3).map(([stat, value]: [string, any]) => (
-                        <div key={stat} style={{ textAlign: 'center', fontSize: '10px' }}>
-                          <div style={{ color: '#94a3b8', fontSize: '8px' }}>{stat.substring(0, 3)}</div>
-                          <div style={{ color: '#4ade80', fontWeight: 'bold' }}>{String(value)}</div>
-                        </div>
-                      ))}
+                {/* Descripción y Flavor */}
+                <div style={{
+                  fontSize: '12px',
+                  color: '#cbd5e1',
+                  lineHeight: '1.4',
+                  borderTop: '1px solid #334155',
+                  borderBottom: '1px solid #334155',
+                  paddingTop: '6px',
+                  paddingBottom: '6px'
+                }}>
+                  <div style={{ marginBottom: '4px' }}>{currentCard.description}</div>
+                  {currentCard.flavorText && (
+                    <div style={{ fontSize: '11px', color: '#94a3b8', fontStyle: 'italic' }}>
+                      "{currentCard.flavorText}"
                     </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Ataques */}
-              {currentCard.attacks && currentCard.attacks.length > 0 && (
-                <div style={{ fontSize: '12px' }}>
-                  <div style={{ color: '#94a3b8', fontSize: '10px', marginBottom: '3px' }}>ATAQUES</div>
-                  {currentCard.attacks.map((attack: string) => (
-                    <div key={attack} style={{ color: '#cbd5e1', fontSize: '11px' }}>
-                      • {attack}
-                    </div>
-                  ))}
+                  )}
                 </div>
-              )}
 
-              {/* Evolución, Dimensiones, Hábitat */}
-              <div style={{
-                fontSize: '12px',
-                color: '#cbd5e1',
-                borderTop: '1px solid #334155',
-                paddingTop: '6px'
-              }}>
-                {currentCard.preEvolution && (
-                  <div style={{ marginBottom: '2px' }}>
-                    <span style={{ color: '#94a3b8' }}>Prev:</span> {currentCard.preEvolution}
-                  </div>
-                )}
-                {currentCard.evolution && (
-                  <div style={{ marginBottom: '2px' }}>
-                    <span style={{ color: '#94a3b8' }}>Próx:</span> {currentCard.evolution}
-                  </div>
-                )}
-                {currentCard.height && (
-                  <div style={{ marginBottom: '2px' }}>
-                    <span style={{ color: '#94a3b8' }}>Alt:</span> {currentCard.height}dm
-                  </div>
-                )}
-                {currentCard.weight && (
-                  <div style={{ marginBottom: '2px' }}>
-                    <span style={{ color: '#94a3b8' }}>Peso:</span> {currentCard.weight}hg
-                  </div>
-                )}
-                {currentCard.habitat && (
+                {/* Habilidad y Stats en grid */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '8px',
+                  fontSize: '11px'
+                }}>
+                  {/* Habilidad */}
                   <div>
-                    <span style={{ color: '#94a3b8' }}>Hábitat:</span> {currentCard.habitat}
+                    <div style={{ color: '#94a3b8', fontSize: '10px', marginBottom: '2px' }}>HABILIDAD</div>
+                    <div style={{ color: '#fbbf24', fontWeight: 'bold', fontSize: '12px' }}>{currentCard.ability}</div>
+                  </div>
+
+                  {/* Stats compacto */}
+                  {currentCard.base && (
+                    <div>
+                      <div style={{ color: '#94a3b8', fontSize: '10px', marginBottom: '2px' }}>STATS</div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '3px' }}>
+                        {Object.entries(currentCard.base).slice(0, 3).map(([stat, value]: [string, any]) => (
+                          <div key={stat} style={{ textAlign: 'center', fontSize: '10px' }}>
+                            <div style={{ color: '#94a3b8', fontSize: '8px' }}>{stat.substring(0, 3)}</div>
+                            <div style={{ color: '#4ade80', fontWeight: 'bold' }}>{String(value)}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Ataques */}
+                {currentCard.attacks && currentCard.attacks.length > 0 && (
+                  <div style={{ fontSize: '12px' }}>
+                    <div style={{ color: '#94a3b8', fontSize: '10px', marginBottom: '3px' }}>ATAQUES</div>
+                    {currentCard.attacks.map((attack: string) => (
+                      <div key={attack} style={{ color: '#cbd5e1', fontSize: '11px' }}>
+                        • {attack}
+                      </div>
+                    ))}
                   </div>
                 )}
+
+                {/* Evolución, Dimensiones, Hábitat */}
+                <div style={{
+                  fontSize: '12px',
+                  color: '#cbd5e1',
+                  borderTop: '1px solid #334155',
+                  paddingTop: '6px'
+                }}>
+                  {currentCard.preEvolution && (
+                    <div style={{ marginBottom: '2px' }}>
+                      <span style={{ color: '#94a3b8' }}>Prev:</span> {currentCard.preEvolution}
+                    </div>
+                  )}
+                  {currentCard.evolution && (
+                    <div style={{ marginBottom: '2px' }}>
+                      <span style={{ color: '#94a3b8' }}>Próx:</span> {currentCard.evolution}
+                    </div>
+                  )}
+                  {currentCard.height && (
+                    <div style={{ marginBottom: '2px' }}>
+                      <span style={{ color: '#94a3b8' }}>Alt:</span> {currentCard.height}dm
+                    </div>
+                  )}
+                  {currentCard.weight && (
+                    <div style={{ marginBottom: '2px' }}>
+                      <span style={{ color: '#94a3b8' }}>Peso:</span> {currentCard.weight}hg
+                    </div>
+                  )}
+                  {currentCard.habitat && (
+                    <div>
+                      <span style={{ color: '#94a3b8' }}>Hábitat:</span> {currentCard.habitat}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
         <div
           style={{
@@ -509,7 +512,7 @@ const App = () => {
           }}
         >
           {/* Panel Central */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: window.innerWidth < 1024 ? '0px' : '20px', paddingTop: window.innerWidth < 1024 ? '0px' : '20px', paddingBottom: window.innerWidth < 1024 ? '0px' : '0', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', paddingLeft: window.innerWidth < 1024 ? '0px' : '20px', paddingRight: window.innerWidth < 1024 ? '0px' : '20px', paddingTop: window.innerWidth < 1024 ? '0px' : '20px', paddingBottom: window.innerWidth < 1024 ? '0px' : '0', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%' }}>
             {showCorrectModal ? (
               /* Modal de Acierto */
               <div style={{
@@ -520,7 +523,8 @@ const App = () => {
                 maxWidth: '500px',
                 width: '100%',
                 boxShadow: '0 0 30px rgba(74, 222, 128, 0.3)',
-                textAlign: 'center'
+                textAlign: 'center',
+                marginTop: window.innerWidth < 1024 ? '40px' : 0
               }}>
                 <h2 style={{ marginTop: 0, marginBottom: '30px', textAlign: 'center', fontSize: '48px', color: '#4ade80' }}>
                   ✨ ¡Acertaste!
@@ -579,7 +583,8 @@ const App = () => {
                 maxWidth: '500px',
                 width: '100%',
                 boxShadow: '0 0 30px rgba(239, 68, 68, 0.3)',
-                textAlign: 'center'
+                textAlign: 'center',
+                marginTop: window.innerWidth < 1024 ? '40px' : 0
               }}>
                 <h2 style={{ marginTop: 0, marginBottom: '20px', textAlign: 'center', fontSize: '48px', color: '#ef4444' }}>
                   ❌ ¡No adivinaste!
@@ -639,7 +644,8 @@ const App = () => {
                 maxWidth: '500px',
                 width: '100%',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-                textAlign: 'center'
+                textAlign: 'center',
+                marginTop: window.innerWidth < 1024 ? '40px' : 0
               }}>
                 <h2 style={{ marginTop: 0, marginBottom: '30px', textAlign: 'center', fontSize: '28px', color: '#4ade80' }}>
                   🎮 ¡Juego Terminado!
@@ -689,7 +695,8 @@ const App = () => {
                 maxWidth: '500px',
                 width: '100%',
                 boxShadow: '0 0 30px rgba(167, 139, 250, 0.5)',
-                textAlign: 'center'
+                textAlign: 'center',
+                marginTop: window.innerWidth < 1024 ? '40px' : 0
               }}>
                 <h2 style={{ marginTop: 0, marginBottom: '20px', textAlign: 'center', fontSize: '48px', color: '#a78bfa' }}>
                   ✨ ¡Easter Egg! ✨
@@ -741,7 +748,8 @@ const App = () => {
                 maxWidth: '500px',
                 width: '100%',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-                textAlign: 'center'
+                textAlign: 'center',
+                marginTop: window.innerWidth < 1024 ? '40px' : 0
               }}>
                 <h1 style={{ marginTop: 0, marginBottom: '40px', textAlign: 'center', fontSize: '36px', color: '#ff6b6b', textShadow: '0 0 10px rgba(255, 107, 107, 0.5)' }}>
                   ¡¿Quién es ese Pokémon?!
@@ -777,7 +785,8 @@ const App = () => {
                 padding: '30px',
                 maxWidth: '600px',
                 width: '100%',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+                boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                marginTop: window.innerWidth < 1024 ? '40px' : 0
               }}>
                 <h2 style={{ marginTop: 0, marginBottom: '25px', textAlign: 'center', fontSize: '24px' }}>
                   ⚙️ Configuración del Juego
@@ -920,7 +929,7 @@ const App = () => {
                 height: window.innerWidth < 1024 ? 'auto' : '100vh',
                 overflowY: 'auto',
                 overflowX: 'hidden',
-                paddingTop: window.innerWidth < 1024 ? '0px' : '20px',
+                paddingTop: window.innerWidth < 1024 ? '80px' : '20px',
                 boxSizing: 'border-box'
               }}>
                 {/* Título */}
@@ -929,8 +938,8 @@ const App = () => {
                   fontWeight: 'bold',
                   color: '#ff6b6b',
                   textShadow: '0 0 10px rgba(255, 107, 107, 0.5)',
-                  marginTop: window.innerWidth < 1024 ? '-8px' : 0,
-                  marginBottom: window.innerWidth < 1024 ? '4px' : '20px',
+                  marginTop: window.innerWidth < 1024 ? '20px' : 0,
+                  marginBottom: window.innerWidth < 1024 ? '20px' : '20px',
                   textAlign: 'center',
                   flexShrink: 0
                 }}>
@@ -1143,22 +1152,22 @@ const App = () => {
                   width: window.innerWidth < 1024 ? '100%' : '100%',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  flexWrap: window.innerWidth < 1024 ? 'wrap' : 'wrap',
+                  flexWrap: window.innerWidth < 1024 ? 'wrap' : 'nowrap',
                   flexDirection: window.innerWidth < 1024 ? 'column' : 'row',
                   padding: window.innerWidth < 1024 ? '12px' : '16px',
                   backgroundColor: '#1e293b',
                   borderTop: '1px solid #334155',
-                  position: window.innerWidth < 1024 ? 'fixed' : 'sticky',
-                  bottom: 0,
-                  left: window.innerWidth < 1024 ? 0 : 'auto',
-                  right: window.innerWidth < 1024 ? 0 : 'auto',
-                  zIndex: window.innerWidth < 1024 ? 100 : 10,
+                  position: window.innerWidth < 1024 ? 'relative' : 'sticky',
+                  bottom: window.innerWidth < 1024 ? 'auto' : 0,
+                  left: 'auto',
+                  right: 'auto',
+                  zIndex: window.innerWidth < 1024 ? 1 : 10,
                   boxSizing: 'border-box',
                   flexShrink: 0,
                   maxWidth: 'none',
                   marginLeft: window.innerWidth < 1024 ? 0 : 'auto',
                   marginRight: window.innerWidth < 1024 ? 0 : 'auto',
-                  paddingBottom: window.innerWidth < 1024 ? '200px' : 'auto'
+                  paddingBottom: window.innerWidth < 1024 ? '12px' : 'auto'
                 }}>
                   <input
                     ref={inputRef}
@@ -1170,15 +1179,18 @@ const App = () => {
                     style={{
                       padding: '12px 16px',
                       borderRadius: '8px',
-                      border: 'none',
+                      border: window.innerWidth < 1024 ? 'none' : '2px solid #4ade80',
+                      borderBottom: window.innerWidth < 1024 ? '2px solid #4ade80' : 'none',
                       background: '#0f172a',
                       color: '#f1f5f9',
                       fontSize: '14px',
                       width: window.innerWidth < 1024 ? '100%' : 'auto',
                       minWidth: window.innerWidth < 1024 ? 'auto' : '300px',
                       outline: 'none',
-                      borderBottom: '2px solid #4ade80',
-                      boxSizing: 'border-box'
+                      boxSizing: 'border-box',
+                      height: window.innerWidth < 1024 ? 'auto' : '44px',
+                      lineHeight: window.innerWidth < 1024 ? 'normal' : '20px',
+                      verticalAlign: 'middle'
                     }}
                   />
                   <button
@@ -1194,7 +1206,10 @@ const App = () => {
                       cursor: 'pointer',
                       transition: 'all 200ms',
                       minWidth: window.innerWidth < 1024 ? '100%' : '120px',
-                      flex: window.innerWidth < 1024 ? '1' : 'unset'
+                      flex: window.innerWidth < 1024 ? '1' : 'unset',
+                      height: window.innerWidth < 1024 ? 'auto' : '44px',
+                      lineHeight: window.innerWidth < 1024 ? 'normal' : '20px',
+                      verticalAlign: 'middle'
                     }}
                   >
                     ✓ Adivinar!
@@ -1212,7 +1227,10 @@ const App = () => {
                       cursor: 'pointer',
                       transition: 'all 200ms',
                       minWidth: window.innerWidth < 1024 ? '100%' : '140px',
-                      flex: window.innerWidth < 1024 ? '1' : 'unset'
+                      flex: window.innerWidth < 1024 ? '1' : 'unset',
+                      height: window.innerWidth < 1024 ? 'auto' : '44px',
+                      lineHeight: window.innerWidth < 1024 ? 'normal' : '20px',
+                      verticalAlign: 'middle'
                     }}
                   >
                     🔄 Cambiar Pokémon
