@@ -247,7 +247,7 @@ const App = () => {
     
     // Obtener tiempo según dificultad
     const diffOpt = difficultyOptions.find(d => d.key === difficulty);
-    const timeInSeconds = diffOpt?.time || 300;
+    const timeInSeconds = diffOpt?.time ?? 300;
     setTimeLeft(timeInSeconds);
     
     if (cards && cards.length > 0) {
