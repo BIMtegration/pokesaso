@@ -781,7 +781,7 @@
     "apodo": "Pokémon Ratón"
   },
   {
-    "name": "Nidoran♀",
+    "name": "Nidoran F",
     "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/29.png",
     "description": "Aunque pequeñas, sus venenosas púas son muy peligrosas. Tienen un cuerno más pequeño que los machos.",
     "type": "Veneno",
@@ -789,7 +789,7 @@
       "Arañazo",
       "Corte"
     ],
-    "evolution": null,
+    "evolution": "Nidorina",
     "preEvolution": null,
     "ability": "Punto Tóxico",
     "history": "",
@@ -865,35 +865,7 @@
     "apodo": "Pokémon Taladro"
   },
   {
-    "name": "Nidoran♀",
-    "imageUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/full/032.png",
-    "description": "Sus bigotes detectan el peligro y le ayudan a huir.",
-    "type": "Veneno",
-    "attacks": [
-      "Doble Bofetón",
-      "Picotazo Veneno"
-    ],
-    "evolution": "Nidorina",
-    "preEvolution": null,
-    "ability": "Punto Tóxico",
-    "history": "Base Set",
-    "numPokedex": 32,
-    "base": {
-      "HP": 46,
-      "Attack": 57,
-      "Defense": 40,
-      "Sp. Attack": 40,
-      "Sp. Defense": 40,
-      "Speed": 50
-    },
-    "height": 5,
-    "weight": 90,
-    "habitat": "grassland",
-    "flavorText": "Saca las orejas por encima de la hierba para explorar el territorio. Le protege su cuerno venenoso.",
-    "apodo": "Pokémon Pin Veneno"
-  },
-  {
-    "name": "Nidoran♂",
+    "name": "Nidoran M",
     "imageUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/full/032.png",
     "description": "Sus orejas son grandes y detectan sonidos lejanos.",
     "type": "Veneno",
@@ -24206,7 +24178,7 @@
     "apodo": "Pokémon Coral"
   },
   {
-    "name": "Sirfetch’d",
+    "name": "Sirfetch'd",
     "imageUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/865.png",
     "description": "Los ejemplares que superan numerosos combates evolucionan y adoptan esta forma. Abandonan el terreno de combate en cuanto el puerro se seca.",
     "type": "Lucha",
