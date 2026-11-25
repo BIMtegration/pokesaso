@@ -1,5 +1,45 @@
 import { useState, useRef, useEffect } from 'react';
 
+const POINTS_BY_ATTEMPT = [100, 80, 60, 40, 20, 5];
+
+const normalizePokemonText = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]/g, '');
+
+const normalizePokemonGuess = (value: string) => {
+  const trimmed = value.trim();
+  if (trimmed.includes('♀')) {
+    return `${normalizePokemonText(trimmed.replace(/♀/g, ''))}f`;
+  }
+  if (trimmed.includes('♂')) {
+    return `${normalizePokemonText(trimmed.replace(/♂/g, ''))}m`;
+  }
+  return normalizePokemonText(trimmed);
+};
+
+const getNidoranVariantInfo = (card: any) => {
+  if (!card) return { isNidoran: false, accepted: [] as string[] };
+  const num = Number(card.numPokedex);
+  const normName = normalizePokemonText(card.name || '');
+  if (num === 29 || normName === 'nidoranf') {
+    return {
+      isNidoran: true,
+      accepted: ['nidoranf', 'nidoranhembra', 'nidoranfemale', 'nidoranmujer'],
+    };
+  }
+  if (num === 32 || normName === 'nidoranm') {
+    return {
+      isNidoran: true,
+      accepted: ['nidoranm', 'nidoranmacho', 'nidoranmale', 'nidoranhombre'],
+    };
+  }
+  return { isNidoran: false, accepted: [] as string[] };
+};
+
 const genMap = {
   gen1: [1, 151],
   gen2: [152, 251],
@@ -41,6 +81,33 @@ const App = () => {
   const [hintLevel, setHintLevel] = useState(0);
   const [expandedHint, setExpandedHint] = useState<number | null>(0);
   const [lastPointsGained, setLastPointsGained] = useState(0);
+  const [lastAttemptUsed, setLastAttemptUsed] = useState(1);
+  const [askNidoranVariant, setAskNidoranVariant] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 1024 : false
+  );
+  const [inputFocused, setInputFocused] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState(() =>
+    typeof window !== 'undefined' ? (window.visualViewport?.height || window.innerHeight) : 800
+  );
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  useEffect(() => {
+    const updateLayoutMetrics = () => {
+      setIsMobile(window.innerWidth < 1024);
+      const vh = window.visualViewport?.height || window.innerHeight;
+      setViewportHeight(vh);
+      setKeyboardOpen(window.innerWidth < 1024 && vh < window.innerHeight * 0.78);
+    };
+    window.addEventListener('resize', updateLayoutMetrics);
+    window.visualViewport?.addEventListener('resize', updateLayoutMetrics);
+    return () => {
+      window.removeEventListener('resize', updateLayoutMetrics);
+      window.visualViewport?.removeEventListener('resize', updateLayoutMetrics);
+    };
+  }, []);
+
+  const isCompactKeyboardMode = isMobile && (keyboardOpen || inputFocused);
 
   const difficultyOptions = [
     { key: 'easy', label: 'Fácil', time: 5 * 60 },
@@ -134,54 +201,87 @@ const App = () => {
     }
   }, [showWrongGuessModal]);
 
-  const leftVisible = Boolean(currentCard && (revealedCard || showWrongGuessModal) && window.innerWidth >= 1024);
+  const leftVisible = Boolean(currentCard && (revealedCard || showWrongGuessModal) && !isMobile);
+
+  const pickRandomCard = (excludeCard?: any) => {
+    if (!cards || cards.length === 0) return null;
+    const filtered = cards.filter(card => {
+      if (!card.numPokedex) return false;
+      const num = Number(card.numPokedex);
+      for (const gKey of selectedGens) {
+        const [from, to] = (genMap as any)[gKey];
+        if (num >= from && num <= to) return true;
+      }
+      return false;
+    });
+    if (filtered.length === 0) return null;
+    const pool =
+      excludeCard && filtered.length > 1
+        ? filtered.filter(c => c.numPokedex !== excludeCard.numPokedex || c.name !== excludeCard.name)
+        : filtered;
+    const candidates = pool.length > 0 ? pool : filtered;
+    return candidates[Math.floor(Math.random() * candidates.length)];
+  };
 
   const handleNextCard = () => {
+    setAskNidoranVariant(false);
     setFeedback('');
     setRound(r => r + 1);
     setRevealedCard(false);
     setHintLevel(0);
     setExpandedHint(0);
-    if (cards && cards.length > 0) {
-      const filtered = cards.filter(card => {
-        if (!card.numPokedex) return false;
-        const num = Number(card.numPokedex);
-        for (const gKey of selectedGens) {
-          const [from, to] = (genMap as any)[gKey];
-          if (num >= from && num <= to) return true;
-        }
-        return false;
-      });
-      if (filtered.length > 0) {
-        const choice = filtered[Math.floor(Math.random() * filtered.length)];
-        setCurrentCard(choice);
-      }
+    const choice = pickRandomCard(currentCard);
+    if (choice) {
+      setCurrentCard(choice);
     }
   };
 
   const handleResetGame = () => {
     setScore(0);
+    setRound(0);
+    setTimeLeft(0);
     setGuessedCards([]);
+    setCurrentCard(null);
     setGameState('init');
     setShowModal(true);
+    setShowCorrectModal(false);
+    setShowWrongGuessModal(false);
+    setShowResultsModal(false);
+    setShowEasterEggModal(false);
     setRevealedCard(false);
     setHintLevel(0);
     setExpandedHint(0);
-    setFeedback('¡Juego reiniciado!');
+    setLastPointsGained(0);
+    setLastAttemptUsed(1);
+    setAskNidoranVariant(false);
+    setUserGuess('');
+    setFeedback('');
   };
 
-  const handleGuess = () => {
-    const g = (userGuess || '').trim().toLowerCase();
-    
+  const handleGuess = (overrideGuess?: unknown) => {
+    const rawGuess = (typeof overrideGuess === 'string' ? overrideGuess : userGuess || '').trim();
+    if (!rawGuess) {
+      inputRef.current?.focus();
+      return;
+    }
+
+    let g = normalizePokemonGuess(rawGuess);
+
+    if (askNidoranVariant) {
+      if (g === 'f' || g === 'hembra' || g === 'female' || g === 'mujer') {
+        g = 'nidoranf';
+      } else if (g === 'm' || g === 'macho' || g === 'male' || g === 'hombre') {
+        g = 'nidoranm';
+      }
+    }
+
     // Caso especial: palabra clave "lumberjack"
     if (g === 'lumberjack') {
-      // Si el panel ya está visible, lo ocultamos
       if (revealedCard) {
         setRevealedCard(false);
         setUserGuess('');
         setFeedback('¡Panel oculto!');
       } else {
-        // Si el panel está oculto, lo mostramos
         setRevealedCard(true);
         setUserGuess('');
         setFeedback('¡Secreto revelado!');
@@ -189,7 +289,7 @@ const App = () => {
       inputRef.current?.focus();
       return;
     }
-    
+
     // Easter egg: detectar "sara"
     if (g === 'sara') {
       setShowEasterEggModal(true);
@@ -197,42 +297,68 @@ const App = () => {
       inputRef.current?.focus();
       return;
     }
-    
+
+    const nidoranInfo = getNidoranVariantInfo(currentCard);
+
+    // Si es Nidoran y solo escribió "nidoran", preguntar cuál variante sin quitar intento
+    if (nidoranInfo.isNidoran && g === 'nidoran') {
+      setAskNidoranVariant(true);
+      setUserGuess('Nidoran ');
+      setFeedback('¿Cuál variante?');
+      inputRef.current?.focus();
+      return;
+    }
+
+    const isCorrect = Boolean(
+      currentCard &&
+      (nidoranInfo.isNidoran
+        ? nidoranInfo.accepted.includes(g)
+        : g === normalizePokemonText(currentCard.name || ''))
+    );
+
     // Validar si el nombre del Pokémon es correcto
-    if (currentCard && g === currentCard.name.toLowerCase()) {
+    if (isCorrect) {
       // Sistema de puntos dinámicos según el hintLevel (6 intentos: 0-5)
-      const pointsMap = [100, 80, 60, 40, 20, 5]; // pista 0, 1, 2, 3, 4, 5
-      const points = pointsMap[hintLevel] || 0;
+      const points = POINTS_BY_ATTEMPT[hintLevel] ?? 0;
       setScore(s => s + points);
       setLastPointsGained(points);
+      setLastAttemptUsed(hintLevel + 1);
+      setGuessedCards(prev => [...prev, currentCard]);
+      setAskNidoranVariant(false);
       setUserGuess('');
+      setFeedback('');
       setRevealedCard(true); // Mostrar el panel
+      setInputFocused(false);
+      inputRef.current?.blur();
       setShowCorrectModal(true);
+      return;
     } else {
+      setAskNidoranVariant(false);
       // Error: incrementar nivel de pista (máximo 6 intentos)
       if (hintLevel < 4) {
-        // Mostrar siguientes pistas (1 a 4)
         setHintLevel(h => h + 1);
         setExpandedHint(hintLevel + 1); // Auto-abrir la nueva pista
         setUserGuess('');
         setFeedback('✗ Intenta de nuevo...');
       } else if (hintLevel === 4) {
-        // Última pista (pista 5 - imagen)
+        // Última oportunidad (pista 5 - imagen)
         setHintLevel(h => h + 1);
         setExpandedHint(4); // Auto-abrir la pista 5 (imagen)
         setUserGuess('');
         setFeedback('✗ ¡Último intento!');
       } else {
-        // Se agotaron todas las pistas - Game over
+        // Se agotaron las 6 oportunidades - Game over de la ronda
         setUserGuess('');
         setFeedback('✗ ¡No adivinaste!');
-        // Mostrar modal de "No adivinaste"
-        setRevealedCard(true); // Mostrar imagen en el panel izquierdo
+        setRevealedCard(true);
+        setInputFocused(false);
+        inputRef.current?.blur();
         setShowWrongGuessModal(true);
+        return;
       }
     }
-    
-    // Devolver focus al input
+
+    // Devolver focus al input solo si seguimos adivinando
     inputRef.current?.focus();
   };
 
@@ -241,31 +367,35 @@ const App = () => {
     setGameState('playing');
     setRound(1);
     setScore(0);
+    setGuessedCards([]);
     setRevealedCard(false);
     setHintLevel(0);
+    setExpandedHint(0);
     setLastPointsGained(0);
-    
+    setLastAttemptUsed(1);
+    setAskNidoranVariant(false);
+    setUserGuess('');
+    setFeedback('');
+
     // Obtener tiempo según dificultad
     const diffOpt = difficultyOptions.find(d => d.key === difficulty);
     const timeInSeconds = diffOpt?.time ?? 300;
     setTimeLeft(timeInSeconds);
-    
-    if (cards && cards.length > 0) {
-      const filtered = cards.filter(card => {
-        if (!card.numPokedex) return false;
-        const num = Number(card.numPokedex);
-        for (const gKey of selectedGens) {
-          const [from, to] = (genMap as any)[gKey];
-          if (num >= from && num <= to) return true;
-        }
-        return false;
-      });
-      if (filtered.length > 0) {
-        const choice = filtered[Math.floor(Math.random() * filtered.length)];
+
+    const choice = pickRandomCard();
+    if (choice) {
+      setCurrentCard(choice);
+    }
+  };
+
+  useEffect(() => {
+    if (gameState === 'playing' && !currentCard && cards && cards.length > 0) {
+      const choice = pickRandomCard();
+      if (choice) {
         setCurrentCard(choice);
       }
     }
-  };
+  }, [gameState, currentCard, cards, selectedGens]);
 
   useEffect(() => {
     let mounted = true;
@@ -290,11 +420,7 @@ const App = () => {
   }, []);
 
   void confettiRef;
-  void handleResetGame;
-  void guessedCards;
   void pulse;
-  void lastPointsGained;
-  void setLastPointsGained;
 
   return (
     <>
@@ -327,7 +453,7 @@ const App = () => {
         }}
       >
         {/* Side panel - solo en desktop */}
-        {window.innerWidth >= 1024 && (
+        {!isMobile && (
           <div
             className="side-panel"
             style={{
@@ -512,38 +638,78 @@ const App = () => {
           }}
         >
           {/* Panel Central */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', paddingLeft: window.innerWidth < 1024 ? '0px' : '20px', paddingRight: window.innerWidth < 1024 ? '0px' : '20px', paddingTop: window.innerWidth < 1024 ? '0px' : '20px', paddingBottom: window.innerWidth < 1024 ? '0px' : '0', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', alignItems: 'center', paddingLeft: isMobile ? '0px' : '20px', paddingRight: isMobile ? '0px' : '20px', paddingTop: isMobile ? '0px' : '20px', paddingBottom: isMobile ? '0px' : '0', flexDirection: 'column', gap: 12, overflowY: 'auto', width: '100%' }}>
             {showCorrectModal ? (
               /* Modal de Acierto */
               <div style={{
                 background: '#0f172a',
                 border: '3px solid #4ade80',
                 borderRadius: '12px',
-                padding: '50px',
+                padding: isMobile ? '22px 18px' : '36px 40px',
                 maxWidth: '500px',
-                width: '100%',
+                width: isMobile ? 'calc(100% - 24px)' : '100%',
+                boxSizing: 'border-box',
                 boxShadow: '0 0 30px rgba(74, 222, 128, 0.3)',
                 textAlign: 'center',
-                marginTop: window.innerWidth < 1024 ? '40px' : 0
+                marginTop: isMobile ? '62px' : 0,
+                marginBottom: isMobile ? '16px' : 0
               }}>
-                <h2 style={{ marginTop: 0, marginBottom: '30px', textAlign: 'center', fontSize: '48px', color: '#4ade80' }}>
+                <h2 style={{
+                  marginTop: 0,
+                  marginBottom: isMobile ? '14px' : '20px',
+                  textAlign: 'center',
+                  fontSize: isMobile ? '30px' : '42px',
+                  color: '#4ade80'
+                }}>
                   ✨ ¡Acertaste!
                 </h2>
-                
-                <div style={{ marginBottom: '30px', fontSize: '20px' }}>
-                  <p style={{ marginBottom: '10px', color: '#e2e8f0' }}>
+
+                {currentCard?.imageUrl && (
+                  <div style={{
+                    margin: isMobile ? '0 auto 14px' : '0 auto 18px',
+                    width: isMobile ? '140px' : '180px',
+                    height: isMobile ? '140px' : '180px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '10px',
+                    borderRadius: '14px',
+                    background: 'radial-gradient(circle, rgba(74, 222, 128, 0.18) 0%, rgba(30, 41, 59, 0.65) 75%)',
+                    border: '1px solid rgba(74, 222, 128, 0.35)',
+                    boxSizing: 'border-box'
+                  }}>
+                    <img
+                      src={currentCard.imageUrl}
+                      alt={currentCard?.name || 'Pokémon'}
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        width: 'auto',
+                        height: 'auto',
+                        objectFit: 'contain',
+                        filter: 'drop-shadow(0 6px 14px rgba(0, 0, 0, 0.45))'
+                      }}
+                    />
+                  </div>
+                )}
+
+                <div style={{ marginBottom: isMobile ? '14px' : '20px', fontSize: isMobile ? '16px' : '20px' }}>
+                  <p style={{ marginTop: 0, marginBottom: '4px', color: '#94a3b8', fontSize: isMobile ? '13px' : '15px' }}>
                     Pokémon:
                   </p>
-                  <p style={{ fontSize: '28px', fontWeight: 'bold', color: '#fbbf24', marginTop: 0, marginBottom: 0 }}>
+                  <p style={{ fontSize: isMobile ? '24px' : '28px', fontWeight: 'bold', color: '#fbbf24', marginTop: 0, marginBottom: 0 }}>
                     {currentCard?.name}
                   </p>
                 </div>
 
-                <div style={{ marginBottom: '25px', padding: '16px', backgroundColor: '#1e293b', borderRadius: '8px', border: '2px solid #fbbf24' }}>
-                  <p style={{ marginTop: 0, marginBottom: '8px', fontSize: '16px', color: '#94a3b8' }}>
-                    Puntos ganados:
+                <div style={{ marginBottom: isMobile ? '16px' : '22px', padding: isMobile ? '12px' : '16px', backgroundColor: '#1e293b', borderRadius: '8px', border: '2px solid #fbbf24' }}>
+                  <p style={{ marginTop: 0, marginBottom: '4px', fontSize: isMobile ? '13px' : '15px', color: '#94a3b8' }}>
+                    Acertado en intento {lastAttemptUsed} de 6 · Puntos ganados:
                   </p>
-                  <p style={{ marginTop: 0, marginBottom: 0, fontSize: '32px', fontWeight: 'bold', color: '#fbbf24' }}>
+                  <p style={{ marginTop: 0, marginBottom: 0, fontSize: isMobile ? '28px' : '32px', fontWeight: 'bold', color: '#fbbf24' }}>
                     +{lastPointsGained}
                   </p>
                 </div>
@@ -559,7 +725,8 @@ const App = () => {
                     }, 100);
                   }}
                   style={{
-                    padding: '14px 40px',
+                    padding: isMobile ? '12px 24px' : '14px 40px',
+                    width: isMobile ? '100%' : 'auto',
                     borderRadius: '8px',
                     border: 'none',
                     background: '#4ade80',
@@ -579,12 +746,14 @@ const App = () => {
                 background: '#0f172a',
                 border: '3px solid #ef4444',
                 borderRadius: '12px',
-                padding: '50px',
+                padding: isMobile ? '24px 18px' : '42px',
                 maxWidth: '500px',
-                width: '100%',
+                width: isMobile ? 'calc(100% - 24px)' : '100%',
+                boxSizing: 'border-box',
                 boxShadow: '0 0 30px rgba(239, 68, 68, 0.3)',
                 textAlign: 'center',
-                marginTop: window.innerWidth < 1024 ? '40px' : 0
+                marginTop: isMobile ? '62px' : 0,
+                marginBottom: isMobile ? '16px' : 0
               }}>
                 <h2 style={{ marginTop: 0, marginBottom: '20px', textAlign: 'center', fontSize: '48px', color: '#ef4444' }}>
                   ❌ ¡No adivinaste!
@@ -645,19 +814,26 @@ const App = () => {
                 width: '100%',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
                 textAlign: 'center',
-                marginTop: window.innerWidth < 1024 ? '40px' : 0
+                marginTop: isMobile ? '40px' : 0
               }}>
                 <h2 style={{ marginTop: 0, marginBottom: '30px', textAlign: 'center', fontSize: '28px', color: '#4ade80' }}>
                   🎮 ¡Juego Terminado!
                 </h2>
                 
-                <div style={{ marginBottom: '30px', fontSize: '18px' }}>
-                  <p style={{ marginBottom: '15px', color: '#e2e8f0' }}>
-                    <strong>Pokémon Adivinados:</strong>
-                  </p>
-                  <p style={{ fontSize: '32px', fontWeight: 'bold', color: '#4ade80', marginTop: 0, marginBottom: 0 }}>
-                    {score}
-                  </p>
+                <div style={{ marginBottom: '30px', fontSize: '18px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div>
+                    <p style={{ margin: '0 0 6px 0', color: '#94a3b8', fontSize: '14px', textTransform: 'uppercase' }}>
+                      Puntaje Total
+                    </p>
+                    <p style={{ fontSize: '38px', fontWeight: 'bold', color: '#fbbf24', margin: 0 }}>
+                      {score} pts
+                    </p>
+                  </div>
+                  <div style={{ paddingTop: '12px', borderTop: '1px solid #334155' }}>
+                    <p style={{ margin: '0 0 4px 0', color: '#e2e8f0', fontSize: '15px' }}>
+                      <strong>Pokémon adivinados:</strong> {guessedCards.length} de {round}
+                    </p>
+                  </div>
                 </div>
 
                 <button
@@ -696,7 +872,7 @@ const App = () => {
                 width: '100%',
                 boxShadow: '0 0 30px rgba(167, 139, 250, 0.5)',
                 textAlign: 'center',
-                marginTop: window.innerWidth < 1024 ? '40px' : 0
+                marginTop: isMobile ? '40px' : 0
               }}>
                 <h2 style={{ marginTop: 0, marginBottom: '20px', textAlign: 'center', fontSize: '48px', color: '#a78bfa' }}>
                   ✨ ¡Easter Egg! ✨
@@ -749,7 +925,7 @@ const App = () => {
                 width: '100%',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
                 textAlign: 'center',
-                marginTop: window.innerWidth < 1024 ? '40px' : 0
+                marginTop: isMobile ? '40px' : 0
               }}>
                 <h1 style={{ marginTop: 0, marginBottom: '40px', textAlign: 'center', fontSize: '36px', color: '#ff6b6b', textShadow: '0 0 10px rgba(255, 107, 107, 0.5)' }}>
                   ¡¿Quién es ese Pokémon?!
@@ -786,7 +962,7 @@ const App = () => {
                 maxWidth: '600px',
                 width: '100%',
                 boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-                marginTop: window.innerWidth < 1024 ? '40px' : 0
+                marginTop: isMobile ? '40px' : 0
               }}>
                 <h2 style={{ marginTop: 0, marginBottom: '25px', textAlign: 'center', fontSize: '24px' }}>
                   ⚙️ Configuración del Juego
@@ -923,30 +1099,184 @@ const App = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'flex-start',
-                gap: '0',
+                gap: isMobile ? '8px' : '0',
                 width: '100%',
                 maxWidth: '700px',
-                height: window.innerWidth < 1024 ? 'auto' : '100vh',
+                height: isMobile ? (isCompactKeyboardMode ? `${viewportHeight}px` : '100dvh') : '100vh',
                 overflowY: 'auto',
                 overflowX: 'hidden',
-                paddingTop: window.innerWidth < 1024 ? '80px' : '20px',
+                paddingTop: isMobile ? '58px' : '20px',
+                paddingLeft: isMobile ? '10px' : 0,
+                paddingRight: isMobile ? '10px' : 0,
+                paddingBottom: isMobile ? '10px' : 0,
                 boxSizing: 'border-box'
               }}>
-                {/* Título */}
-                <h1 style={{
-                  fontSize: '36px',
-                  fontWeight: 'bold',
-                  color: '#ff6b6b',
-                  textShadow: '0 0 10px rgba(255, 107, 107, 0.5)',
-                  marginTop: window.innerWidth < 1024 ? '20px' : 0,
-                  marginBottom: window.innerWidth < 1024 ? '20px' : '20px',
-                  textAlign: 'center',
-                  flexShrink: 0
-                }}>
-                  ¡¿Quién es ese Pokémon?!
-                </h1>
+                {/* Título (compacto en móvil y oculto mientras se escribe con teclado abierto) */}
+                {!isCompactKeyboardMode && (
+                  <h1 style={{
+                    fontSize: isMobile ? '20px' : '36px',
+                    fontWeight: 'bold',
+                    color: '#ff6b6b',
+                    textShadow: '0 0 10px rgba(255, 107, 107, 0.5)',
+                    marginTop: isMobile ? '4px' : 0,
+                    marginBottom: isMobile ? '4px' : '20px',
+                    textAlign: 'center',
+                    flexShrink: 0
+                  }}>
+                    ¡¿Quién es ese Pokémon?!
+                  </h1>
+                )}
+
+                {/* En móvil, los controles van arriba de las pistas para que el teclado nunca los cubra */}
+                {isMobile && (
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                    width: '100%',
+                    padding: '8px 10px',
+                    backgroundColor: '#0f172a',
+                    border: '1px solid #334155',
+                    borderRadius: '10px',
+                    boxSizing: 'border-box',
+                    flexShrink: 0
+                  }}>
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      enterKeyHint="send"
+                      value={userGuess}
+                      onChange={(e) => setUserGuess(e.target.value)}
+                      onFocus={() => setInputFocused(true)}
+                      onBlur={() => window.setTimeout(() => setInputFocused(false), 120)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleGuess()}
+                      placeholder={askNidoranVariant ? "Escribe F (Hembra) o M (Macho)..." : "Escribe el nombre del Pokémon..."}
+                      style={{
+                        padding: '10px 12px',
+                        borderRadius: '8px',
+                        border: '2px solid #4ade80',
+                        background: '#1e293b',
+                        color: '#f1f5f9',
+                        fontSize: '15px',
+                        width: '100%',
+                        outline: 'none',
+                        boxSizing: 'border-box'
+                      }}
+                    />
+                    <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                      <button
+                        type="button"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => handleGuess()}
+                        style={{
+                          padding: '9px 10px',
+                          borderRadius: '8px',
+                          border: 'none',
+                          background: '#4ade80',
+                          color: '#0f172a',
+                          fontSize: '13px',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          flex: '1 1 0',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        ✓ Adivinar!
+                      </button>
+                      <button
+                        type="button"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={handleNextCard}
+                        style={{
+                          padding: '9px 10px',
+                          borderRadius: '8px',
+                          border: 'none',
+                          background: '#60a5fa',
+                          color: '#0f172a',
+                          fontSize: '13px',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          flex: '1 1 0',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        🔄 Cambiar
+                      </button>
+                    </div>
+                    {askNidoranVariant && (
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '6px',
+                        padding: '8px',
+                        borderRadius: '8px',
+                        backgroundColor: 'rgba(251, 191, 36, 0.1)',
+                        border: '1px solid rgba(251, 191, 36, 0.45)'
+                      }}>
+                        <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#fbbf24', textAlign: 'center' }}>
+                          ¿Cuál variante de Nidoran es?
+                        </span>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button
+                            type="button"
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => handleGuess('Nidoran F')}
+                            style={{
+                              flex: 1,
+                              padding: '8px',
+                              borderRadius: '6px',
+                              border: '1px solid #f472b6',
+                              background: 'rgba(244, 114, 182, 0.18)',
+                              color: '#f9a8d4',
+                              fontSize: '12px',
+                              fontWeight: 'bold',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            Nidoran F (Hembra)
+                          </button>
+                          <button
+                            type="button"
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => handleGuess('Nidoran M')}
+                            style={{
+                              flex: 1,
+                              padding: '8px',
+                              borderRadius: '6px',
+                              border: '1px solid #60a5fa',
+                              background: 'rgba(96, 165, 250, 0.18)',
+                              color: '#93c5fd',
+                              fontSize: '12px',
+                              fontWeight: 'bold',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            Nidoran M (Macho)
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Pistas con Pestañas (Tabs) */}
+                {!currentCard && (
+                  <div style={{
+                    background: '#0f172a',
+                    border: '2px solid #334155',
+                    borderRadius: '12px',
+                    width: '100%',
+                    maxWidth: '700px',
+                    padding: '28px 20px',
+                    textAlign: 'center',
+                    color: '#94a3b8',
+                    fontSize: '14px',
+                    marginBottom: '12px',
+                    boxSizing: 'border-box'
+                  }}>
+                    Cargando pistas del Pokémon...
+                  </div>
+                )}
                 {currentCard && (
                   <div style={{
                     background: '#0f172a',
@@ -958,24 +1288,40 @@ const App = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     flex: '1 1 auto',
-                    maxHeight: window.innerWidth < 1024 ? 'calc(100vh - 60px)' : 'calc(100vh - 120px)',
-                    marginBottom: window.innerWidth < 1024 ? '8px' : '12px',
-                    marginTop: window.innerWidth < 1024 ? '0px' : '0px',
+                    minHeight: isMobile ? '140px' : 'auto',
+                    maxHeight: isMobile
+                      ? (isCompactKeyboardMode ? `${Math.max(150, Math.round(viewportHeight - 175))}px` : 'calc(100dvh - 200px)')
+                      : 'calc(100vh - 120px)',
+                    marginBottom: isMobile ? '4px' : '12px',
+                    marginTop: isMobile ? '0px' : '0px',
                     overflow: 'hidden'
                   }}
                   >
                     {/* Header con título y feedback */}
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', padding: '12px 16px', borderBottom: '2px solid #334155' }}>
-                      <h3 style={{ marginTop: 0, marginBottom: 0, fontSize: '16px', color: '#4ade80', flex: 1 }}>
-                        💡 PISTAS
-                      </h3>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, flexWrap: 'wrap' }}>
+                        <h3 style={{ marginTop: 0, marginBottom: 0, fontSize: '16px', color: '#4ade80' }}>
+                          💡 PISTAS
+                        </h3>
+                        <span style={{
+                          fontSize: '12px',
+                          fontWeight: 'bold',
+                          color: '#fbbf24',
+                          backgroundColor: 'rgba(251, 191, 36, 0.12)',
+                          border: '1px solid rgba(251, 191, 36, 0.35)',
+                          borderRadius: '6px',
+                          padding: '3px 8px'
+                        }}>
+                          Intento {hintLevel + 1}/6 · Vale {POINTS_BY_ATTEMPT[hintLevel] ?? 0} pts
+                        </span>
+                      </div>
                       {feedback && (
                         <div style={{
                           padding: '6px 10px',
                           borderRadius: '6px',
-                          border: '1px solid ' + (feedback.includes('correcto') ? '#4ade80' : '#ef4444'),
-                          backgroundColor: feedback.includes('correcto') ? 'rgba(74, 222, 128, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                          color: feedback.includes('correcto') ? '#4ade80' : '#ef4444',
+                          border: '1px solid ' + (feedback.includes('variante') ? '#fbbf24' : (feedback.includes('correcto') || feedback.includes('Secreto') || feedback.includes('oculto') ? '#4ade80' : '#ef4444')),
+                          backgroundColor: feedback.includes('variante') ? 'rgba(251, 191, 36, 0.15)' : (feedback.includes('correcto') || feedback.includes('Secreto') || feedback.includes('oculto') ? 'rgba(74, 222, 128, 0.15)' : 'rgba(239, 68, 68, 0.15)'),
+                          color: feedback.includes('variante') ? '#fbbf24' : (feedback.includes('correcto') || feedback.includes('Secreto') || feedback.includes('oculto') ? '#4ade80' : '#ef4444'),
                           fontSize: '11px',
                           fontWeight: 'bold',
                           whiteSpace: 'nowrap',
@@ -1145,56 +1491,111 @@ const App = () => {
                   </div>
                 )}
 
-                {/* Input y Botones - Fixed en móvil, Sticky en desktop */}
+                {/* Input y Botones - Sticky abajo en desktop */}
+                {!isMobile && (
                 <div style={{
                   display: 'flex',
+                  flexDirection: 'column',
                   gap: '10px',
-                  width: window.innerWidth < 1024 ? '100%' : '100%',
-                  justifyContent: 'center',
+                  width: '100%',
                   alignItems: 'center',
-                  flexWrap: window.innerWidth < 1024 ? 'wrap' : 'nowrap',
-                  flexDirection: window.innerWidth < 1024 ? 'column' : 'row',
-                  padding: window.innerWidth < 1024 ? '12px' : '16px',
+                  padding: '16px',
                   backgroundColor: '#1e293b',
                   borderTop: '1px solid #334155',
-                  position: window.innerWidth < 1024 ? 'relative' : 'sticky',
-                  bottom: window.innerWidth < 1024 ? 'auto' : 0,
-                  left: 'auto',
-                  right: 'auto',
-                  zIndex: window.innerWidth < 1024 ? 1 : 10,
+                  position: 'sticky',
+                  bottom: 0,
+                  zIndex: 10,
                   boxSizing: 'border-box',
                   flexShrink: 0,
-                  maxWidth: 'none',
-                  marginLeft: window.innerWidth < 1024 ? 0 : 'auto',
-                  marginRight: window.innerWidth < 1024 ? 0 : 'auto',
-                  paddingBottom: window.innerWidth < 1024 ? '12px' : 'auto'
+                  marginLeft: 'auto',
+                  marginRight: 'auto'
                 }}>
+                  {askNidoranVariant && (
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '10px',
+                      flexWrap: 'wrap',
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(251, 191, 36, 0.1)',
+                      border: '1px solid rgba(251, 191, 36, 0.45)',
+                      width: '100%',
+                      maxWidth: '620px',
+                      boxSizing: 'border-box'
+                    }}>
+                      <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#fbbf24' }}>
+                        ¿Cuál variante de Nidoran es?
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleGuess('Nidoran F')}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          border: '1px solid #f472b6',
+                          background: 'rgba(244, 114, 182, 0.18)',
+                          color: '#f9a8d4',
+                          fontSize: '13px',
+                          fontWeight: 'bold',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Nidoran F (Hembra)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleGuess('Nidoran M')}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          border: '1px solid #60a5fa',
+                          background: 'rgba(96, 165, 250, 0.18)',
+                          color: '#93c5fd',
+                          fontSize: '13px',
+                          fontWeight: 'bold',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Nidoran M (Macho)
+                      </button>
+                    </div>
+                  )}
+                  <div style={{
+                    display: 'flex',
+                    gap: '10px',
+                    width: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexWrap: 'nowrap',
+                    flexDirection: 'row'
+                  }}>
                   <input
                     ref={inputRef}
                     type="text"
+                    enterKeyHint="send"
                     value={userGuess}
                     onChange={(e) => setUserGuess(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleGuess()}
-                    placeholder="Escribe el nombre del Pokémon..."
+                    onKeyDown={(e) => e.key === 'Enter' && handleGuess()}
+                    placeholder={askNidoranVariant ? "Escribe F (Hembra) o M (Macho)..." : "Escribe el nombre del Pokémon..."}
                     style={{
                       padding: '12px 16px',
                       borderRadius: '8px',
-                      border: window.innerWidth < 1024 ? 'none' : '2px solid #4ade80',
-                      borderBottom: window.innerWidth < 1024 ? '2px solid #4ade80' : 'none',
+                      border: '2px solid #4ade80',
                       background: '#0f172a',
                       color: '#f1f5f9',
                       fontSize: '14px',
-                      width: window.innerWidth < 1024 ? '100%' : 'auto',
-                      minWidth: window.innerWidth < 1024 ? 'auto' : '300px',
+                      minWidth: '300px',
                       outline: 'none',
                       boxSizing: 'border-box',
-                      height: window.innerWidth < 1024 ? 'auto' : '44px',
-                      lineHeight: window.innerWidth < 1024 ? 'normal' : '20px',
+                      height: '44px',
+                      lineHeight: '20px',
                       verticalAlign: 'middle'
                     }}
                   />
                   <button
-                    onClick={handleGuess}
+                    onClick={() => handleGuess()}
                     style={{
                       padding: '12px 20px',
                       borderRadius: '8px',
@@ -1205,10 +1606,9 @@ const App = () => {
                       fontWeight: 'bold',
                       cursor: 'pointer',
                       transition: 'all 200ms',
-                      minWidth: window.innerWidth < 1024 ? '100%' : '120px',
-                      flex: window.innerWidth < 1024 ? '1' : 'unset',
-                      height: window.innerWidth < 1024 ? 'auto' : '44px',
-                      lineHeight: window.innerWidth < 1024 ? 'normal' : '20px',
+                      minWidth: '120px',
+                      height: '44px',
+                      lineHeight: '20px',
                       verticalAlign: 'middle'
                     }}
                   >
@@ -1226,16 +1626,17 @@ const App = () => {
                       fontWeight: 'bold',
                       cursor: 'pointer',
                       transition: 'all 200ms',
-                      minWidth: window.innerWidth < 1024 ? '100%' : '140px',
-                      flex: window.innerWidth < 1024 ? '1' : 'unset',
-                      height: window.innerWidth < 1024 ? 'auto' : '44px',
-                      lineHeight: window.innerWidth < 1024 ? 'normal' : '20px',
+                      minWidth: '140px',
+                      height: '44px',
+                      lineHeight: '20px',
                       verticalAlign: 'middle'
                     }}
                   >
                     🔄 Cambiar Pokémon
                   </button>
+                  </div>
                 </div>
+                )}
               </div>
             )}
           </div>
@@ -1243,35 +1644,35 @@ const App = () => {
           {/* Panel Derecho - Contador de Puntos */}
           {gameState === 'playing' && (
             <div style={{
-              width: window.innerWidth < 1024 ? 'calc(100vw - 0px)' : '200px',
-              height: window.innerWidth < 1024 ? 'auto' : '100vh',
+              width: isMobile ? 'calc(100vw - 0px)' : '200px',
+              height: isMobile ? 'auto' : '100vh',
               background: '#0b1220',
-              borderLeft: window.innerWidth < 1024 ? 'none' : '3px solid #4ade80',
-              borderTop: window.innerWidth < 1024 ? '3px solid #4ade80' : 'none',
-              borderRight: window.innerWidth < 1024 ? 'none' : 'none',
+              borderLeft: isMobile ? 'none' : '3px solid #4ade80',
+              borderTop: isMobile ? '3px solid #4ade80' : 'none',
+              borderRight: isMobile ? 'none' : 'none',
               display: 'flex',
-              flexDirection: window.innerWidth < 1024 ? 'row' : 'column',
+              flexDirection: isMobile ? 'row' : 'column',
               alignItems: 'center',
-              justifyContent: window.innerWidth < 1024 ? 'space-around' : 'flex-start',
-              gap: window.innerWidth < 1024 ? '0px' : '16px',
-              padding: window.innerWidth < 1024 ? '2px 4px' : '12px',
+              justifyContent: isMobile ? 'space-around' : 'flex-start',
+              gap: isMobile ? '0px' : '16px',
+              padding: isMobile ? '2px 4px' : '12px',
               boxSizing: 'border-box',
-              position: window.innerWidth < 1024 ? 'fixed' : 'relative',
-              top: window.innerWidth < 1024 ? 0 : 'auto',
-              left: window.innerWidth < 1024 ? 0 : 'auto',
-              right: window.innerWidth < 1024 ? 0 : 'auto',
-              zIndex: window.innerWidth < 1024 ? 5 : 'auto',
-              overflowY: window.innerWidth < 1024 ? 'visible' : 'auto'
+              position: isMobile ? 'fixed' : 'relative',
+              top: isMobile ? 0 : 'auto',
+              left: isMobile ? 0 : 'auto',
+              right: isMobile ? 0 : 'auto',
+              zIndex: isMobile ? 5 : 'auto',
+              overflowY: isMobile ? 'visible' : 'auto'
             }}>
               {/* Puntos grandes */}
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: window.innerWidth < 1024 ? '0px' : '10px'
+                gap: isMobile ? '0px' : '10px'
               }}>
                 <div style={{
-                  fontSize: window.innerWidth < 1024 ? '10px' : '14px',
+                  fontSize: isMobile ? '10px' : '14px',
                   fontWeight: 'bold',
                   color: '#94a3b8',
                   textTransform: 'uppercase',
@@ -1280,7 +1681,7 @@ const App = () => {
                   Pts
                 </div>
                 <div style={{
-                  fontSize: window.innerWidth < 1024 ? '20px' : '64px',
+                  fontSize: isMobile ? '20px' : '64px',
                   fontWeight: 'bold',
                   color: '#4ade80',
                   textShadow: '0 0 20px rgba(74, 222, 128, 0.5)',
@@ -1295,10 +1696,10 @@ const App = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: window.innerWidth < 1024 ? '0px' : '10px'
+                gap: isMobile ? '0px' : '10px'
               }}>
                 <div style={{
-                  fontSize: window.innerWidth < 1024 ? '9px' : '14px',
+                  fontSize: isMobile ? '9px' : '14px',
                   fontWeight: 'bold',
                   color: '#94a3b8',
                   textTransform: 'uppercase',
@@ -1307,7 +1708,7 @@ const App = () => {
                   T
                 </div>
                 <div style={{
-                  fontSize: window.innerWidth < 1024 ? '14px' : '44px',
+                  fontSize: isMobile ? '14px' : '44px',
                   fontWeight: 'bold',
                   color: timeLeft <= 30 ? '#ef4444' : '#4ade80',
                   textShadow: timeLeft <= 30 ? '0 0 20px rgba(239, 68, 68, 0.5)' : '0 0 20px rgba(74, 222, 128, 0.5)',
@@ -1323,10 +1724,10 @@ const App = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: window.innerWidth < 1024 ? '0px' : '10px'
+                gap: isMobile ? '0px' : '10px'
               }}>
                 <div style={{
-                  fontSize: window.innerWidth < 1024 ? '9px' : '14px',
+                  fontSize: isMobile ? '9px' : '14px',
                   fontWeight: 'bold',
                   color: '#94a3b8',
                   textTransform: 'uppercase',
@@ -1335,7 +1736,7 @@ const App = () => {
                   R
                 </div>
                 <div style={{
-                  fontSize: window.innerWidth < 1024 ? '18px' : '48px',
+                  fontSize: isMobile ? '18px' : '48px',
                   fontWeight: 'bold',
                   color: '#60a5fa',
                   textShadow: '0 0 20px rgba(96, 165, 250, 0.5)'
@@ -1345,7 +1746,7 @@ const App = () => {
               </div>
 
               {/* Dificultad - Solo en Desktop */}
-              {window.innerWidth >= 1024 && (
+              {!isMobile && (
               <div style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -1375,7 +1776,7 @@ const App = () => {
               )}
 
               {/* Botón Reiniciar - Solo en Desktop */}
-              {window.innerWidth >= 1024 && (
+              {!isMobile && (
               <button
                 onClick={handleResetGame}
                 style={{
